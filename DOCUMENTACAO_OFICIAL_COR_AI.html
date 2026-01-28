@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COR.AI - Documentação Oficial do Sistema</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #1a1a2e;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: #fff;
+        }
+
+        @media print {
+            body {
+                padding: 20px;
+                font-size: 11pt;
+            }
+            .no-print {
+                display: none;
+            }
+            h1, h2, h3 {
+                page-break-after: avoid;
+            }
+            table, pre {
+                page-break-inside: avoid;
+            }
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #0f172a;
+            border-bottom: 4px solid #3b82f6;
+            padding-bottom: 15px;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 1.8em;
+            color: #1e3a5f;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            font-size: 1.4em;
+            color: #334155;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        h4 {
+            font-size: 1.1em;
+            color: #475569;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            color: #64748b;
+            margin-bottom: 30px;
+        }
+
+        .meta-info {
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .meta-info p {
+            margin: 5px 0;
+        }
+
+        .warning {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .warning strong {
+            color: #92400e;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95em;
+        }
+
+        th, td {
+            border: 1px solid #e2e8f0;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        code {
+            background: #f1f5f9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.9em;
+            color: #be185d;
+        }
+
+        pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-size: 0.9em;
+        }
+
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+
+        ul, ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+
+        li {
+            margin: 8px 0;
+        }
+
+        .toc {
+            background: #f8fafc;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 30px 0;
+        }
+
+        .toc h3 {
+            margin-top: 0;
+        }
+
+        .toc ol {
+            columns: 2;
+        }
+
+        .toc a {
+            color: #3b82f6;
+            text-decoration: none;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+
+        .badge-green { background: #dcfce7; color: #166534; }
+        .badge-yellow { background: #fef9c3; color: #854d0e; }
+        .badge-orange { background: #ffedd5; color: #9a3412; }
+        .badge-red { background: #fee2e2; color: #991b1b; }
+        .badge-purple { background: #f3e8ff; color: #7c3aed; }
+        .badge-blue { background: #dbeafe; color: #1e40af; }
+
+        .print-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        .print-btn:hover {
+            background: #2563eb;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #e2e8f0;
+            margin: 30px 0;
+        }
+
+        .diagram {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            font-family: monospace;
+            white-space: pre;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        .section-number {
+            color: #3b82f6;
+            font-weight: bold;
+        }
+
+        .credential-box {
+            background: #fef2f2;
+            border: 2px solid #fecaca;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .credential-box h4 {
+            color: #991b1b;
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <button class="print-btn no-print" onclick="window.print()">
+        📄 Salvar como PDF
+    </button>
+
+    <h1>COR.AI - Documentação Oficial do Sistema</h1>
+    <p class="subtitle">Centro de Operações Rio - Sistema de Alertas Georreferenciados</p>
+
+    <div class="meta-info">
+        <p><strong>Versão do Documento:</strong> 1.0</p>
+        <p><strong>Data:</strong> 27 de Janeiro de 2026</p>
+        <p><strong>Classificação:</strong> <span class="badge badge-red">CONFIDENCIAL - USO INTERNO</span></p>
+    </div>
+
+    <div class="toc">
+        <h3>Índice</h3>
+        <ol>
+            <li><a href="#visao-geral">Visão Geral do Sistema</a></li>
+            <li><a href="#arquitetura">Arquitetura Técnica</a></li>
+            <li><a href="#credenciais">Credenciais e Acessos</a></li>
+            <li><a href="#backend">Backend API (cor-api)</a></li>
+            <li><a href="#admin">Painel Administrativo (cor-admin)</a></li>
+            <li><a href="#mobile">Aplicativo Mobile (cor_app)</a></li>
+            <li><a href="#banco">Banco de Dados</a></li>
+            <li><a href="#integracoes">Integrações Externas</a></li>
+            <li><a href="#deploy">Deploy e Infraestrutura</a></li>
+            <li><a href="#manutencao">Manutenção e Troubleshooting</a></li>
+        </ol>
+    </div>
+
+    <h2 id="visao-geral"><span class="section-number">1.</span> Visão Geral do Sistema</h2>
+
+    <h3>1.1 Descrição</h3>
+    <p>O <strong>COR.AI</strong> é um sistema integrado de alertas georreferenciados desenvolvido para o Centro de Operações Rio de Janeiro. O sistema permite:</p>
+    <ul>
+        <li>Monitoramento em tempo real do status operacional da cidade</li>
+        <li>Envio de alertas push para cidadãos baseados em localização</li>
+        <li>Visualização de dados meteorológicos, pluviométricos e de incidentes</li>
+        <li>Gerenciamento centralizado via painel administrativo</li>
+    </ul>
+
+    <h3>1.2 Componentes do Sistema</h3>
+    <table>
+        <tr>
+            <th>Componente</th>
+            <th>Tecnologia</th>
+            <th>Porta</th>
+            <th>Descrição</th>
+        </tr>
+        <tr>
+            <td><strong>cor-api</strong></td>
+            <td>FastAPI (Python 3.9+)</td>
+            <td>8000</td>
+            <td>Backend REST API</td>
+        </tr>
+        <tr>
+            <td><strong>cor-admin</strong></td>
+            <td>Next.js 14 (React)</td>
+            <td>3000</td>
+            <td>Painel administrativo web</td>
+        </tr>
+        <tr>
+            <td><strong>cor_app</strong></td>
+            <td>Flutter 3.2+</td>
+            <td>-</td>
+            <td>Aplicativo mobile iOS/Android</td>
+        </tr>
+        <tr>
+            <td><strong>PostgreSQL</strong></td>
+            <td>PostgreSQL 15 + PostGIS</td>
+            <td>5432</td>
+            <td>Banco de dados principal</td>
+        </tr>
+        <tr>
+            <td><strong>Redis</strong></td>
+            <td>Redis 7</td>
+            <td>6379</td>
+            <td>Cache e fila de mensagens</td>
+        </tr>
+    </table>
+
+    <h3>1.3 Fluxo de Dados</h3>
+    <div class="diagram">┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│   cor_app       │◄────│    cor-api      │◄────│   cor-admin     │
+│   (Flutter)     │     │   (FastAPI)     │     │   (Next.js)     │
+└────────┬────────┘     └────────┬────────┘     └─────────────────┘
+         │                       │
+         │                       ▼
+         │              ┌─────────────────┐
+         │              │   PostgreSQL    │
+         │              │   + PostGIS     │
+         │              └─────────────────┘
+         │                       │
+         ▼                       ▼
+┌─────────────────┐     ┌─────────────────┐
+│  Firebase FCM   │     │     Redis       │
+│ (Push Notif.)   │     │ (Cache/Queue)   │
+└─────────────────┘     └─────────────────┘</div>
+
+    <h2 id="credenciais"><span class="section-number">3.</span> Credenciais e Acessos</h2>
+
+    <div class="warning">
+        <strong>⚠️ ATENÇÃO:</strong> As credenciais abaixo são para ambiente de DESENVOLVIMENTO. Em produção, use senhas fortes e diferentes!
+    </div>
+
+    <h3>3.1 Banco de Dados PostgreSQL</h3>
+    <div class="credential-box">
+        <h4>🔐 Credenciais do Banco de Dados</h4>
+        <table>
+            <tr><th>Parâmetro</th><th>Valor</th></tr>
+            <tr><td>Host</td><td><code>localhost</code> / <code>db</code> (Docker)</td></tr>
+            <tr><td>Porta</td><td><code>5432</code></td></tr>
+            <tr><td>Database</td><td><code>cor_db</code></td></tr>
+            <tr><td>Usuário</td><td><code>cor</code></td></tr>
+            <tr><td>Senha</td><td><code>cor123</code></td></tr>
+            <tr><td>URL Completa</td><td><code>postgresql://cor:cor123@localhost:5432/cor_db</code></td></tr>
+        </table>
+    </div>
+
+    <h3>3.2 Redis</h3>
+    <div class="credential-box">
+        <h4>🔐 Credenciais Redis</h4>
+        <table>
+            <tr><th>Parâmetro</th><th>Valor</th></tr>
+            <tr><td>Host</td><td><code>localhost</code> / <code>redis</code> (Docker)</td></tr>
+            <tr><td>Porta</td><td><code>6379</code></td></tr>
+            <tr><td>Database 0</td><td>Cache de dados</td></tr>
+            <tr><td>Database 1</td><td>Celery broker/backend</td></tr>
+            <tr><td>URL</td><td><code>redis://localhost:6379/0</code></td></tr>
+        </table>
+    </div>
+
+    <h3>3.3 Painel Administrativo</h3>
+    <div class="credential-box">
+        <h4>🔐 Acesso ao Painel Admin</h4>
+        <table>
+            <tr><th>Campo</th><th>Valor</th></tr>
+            <tr><td>URL</td><td><code>http://localhost:3000</code></td></tr>
+            <tr><td>Email Admin</td><td><code>admin@cor.rio.gov.br</code></td></tr>
+            <tr><td>Senha</td><td>(definida na primeira execução)</td></tr>
+        </table>
+    </div>
+
+    <h4>Níveis de Acesso (RBAC)</h4>
+    <table>
+        <tr><th>Role</th><th>Permissões</th></tr>
+        <tr>
+            <td><span class="badge badge-red">admin</span></td>
+            <td>Acesso total: alertas, status, auditoria, usuários</td>
+        </tr>
+        <tr>
+            <td><span class="badge badge-orange">comunicacao</span></td>
+            <td>Criar/enviar alertas, alterar status operacional</td>
+        </tr>
+        <tr>
+            <td><span class="badge badge-blue">viewer</span></td>
+            <td>Somente visualização (dashboard e alertas)</td>
+        </tr>
+    </table>
+
+    <h3>3.4 Tokens e Chaves de API</h3>
+    <div class="credential-box">
+        <h4>🔐 Chaves de Segurança</h4>
+        <table>
+            <tr><th>Variável</th><th>Descrição</th><th>Valor Padrão (DEV)</th></tr>
+            <tr>
+                <td><code>API_KEY</code></td>
+                <td>Chave para endpoints públicos</td>
+                <td>your-secret-api-key-change-in-production</td>
+            </tr>
+            <tr>
+                <td><code>JWT_SECRET_KEY</code></td>
+                <td>Chave para tokens JWT</td>
+                <td>change-this-in-production-use-secrets-token-hex-32</td>
+            </tr>
+            <tr>
+                <td><code>JWT_ALGORITHM</code></td>
+                <td>Algoritmo JWT</td>
+                <td>HS256</td>
+            </tr>
+            <tr>
+                <td><code>JWT_ACCESS_TOKEN_EXPIRE_MINUTES</code></td>
+                <td>Expiração do token</td>
+                <td>480 (8 horas)</td>
+            </tr>
+        </table>
+    </div>
+
+    <h2 id="backend"><span class="section-number">4.</span> Backend API (cor-api)</h2>
+
+    <h3>4.1 Endpoints Públicos</h3>
+
+    <h4>Status e Saúde</h4>
+    <table>
+        <tr><th>Método</th><th>Endpoint</th><th>Descrição</th></tr>
+        <tr><td><span class="badge badge-green">GET</span></td><td><code>/v1/health</code></td><td>Status de saúde do sistema</td></tr>
+        <tr><td><span class="badge badge-green">GET</span></td><td><code>/v1/status/operational</code></td><td>Status operacional atual</td></tr>
+    </table>
+
+    <h4>Clima e Meteorologia</h4>
+    <table>
+        <tr><th>Método</th><th>Endpoint</th><th>Descrição</th></tr>
+        <tr><td><span class="badge badge-green">GET</span></td><td><code>/v1/weather/now</code></td><td>Condições climáticas atuais</td></tr>
+        <tr><td><span class="badge badge-green">GET</span></td><td><code>/v1/weather/forecast</code></td><td>Previsão horária (até 168h)</td></tr>
+        <tr><td><span class="badge badge-green">GET</span></td><td><code>/v1/weather/radar/latest</code></td><td>Imagem de radar mais recente</td></tr>
+    </table>
+
+    <h4>Pluviômetros e Sirenes</h4>
+    <table>
+        <tr><th>Método</th><th>Endpoint</th><th>Descrição</th></tr>
+        <tr><td><span class="badge badge-green">GET</span></td><td><code>/v1/rain-gauges</code></td><td>Estações pluviométricas</td></tr>
+        <tr><td><span class="badge badge-green">GET</span></td><td><code>/v1/sirens</code></td><td>Status das sirenes</td></tr>
+        <tr><td><span class="badge badge-green">GET</span></td><td><code>/v1/incidents</code></td><td>Incidentes ativos</td></tr>
+    </table>
+
+    <h4>Dispositivos e Alertas</h4>
+    <table>
+        <tr><th>Método</th><th>Endpoint</th><th>Descrição</th></tr>
+        <tr><td><span class="badge badge-blue">POST</span></td><td><code>/v1/devices/register</code></td><td>Registrar dispositivo para push</td></tr>
+        <tr><td><span class="badge badge-blue">POST</span></td><td><code>/v1/devices/location</code></td><td>Atualizar localização</td></tr>
+        <tr><td><span class="badge badge-green">GET</span></td><td><code>/v1/alerts/inbox</code></td><td>Caixa de entrada de alertas</td></tr>
+    </table>
+
+    <h3>4.2 Endpoints Administrativos</h3>
+
+    <h4>Autenticação</h4>
+    <table>
+        <tr><th>Método</th><th>Endpoint</th><th>Descrição</th></tr>
+        <tr><td><span class="badge badge-blue">POST</span></td><td><code>/v1/admin/auth/login</code></td><td>Login (retorna JWT)</td></tr>
+        <tr><td><span class="badge badge-green">GET</span></td><td><code>/v1/admin/auth/me</code></td><td>Usuário autenticado</td></tr>
+    </table>
+
+    <h4>Status Operacional</h4>
+    <table>
+        <tr><th>Método</th><th>Endpoint</th><th>Permissão</th><th>Descrição</th></tr>
+        <tr><td><span class="badge badge-green">GET</span></td><td><code>/v1/admin/status/operational</code></td><td>Todos</td><td>Status atual</td></tr>
+        <tr><td><span class="badge badge-blue">POST</span></td><td><code>/v1/admin/status/operational</code></td><td>admin, comunicacao</td><td>Alterar status</td></tr>
+        <tr><td><span class="badge badge-green">GET</span></td><td><code>/v1/admin/status/history</code></td><td>Todos</td><td>Histórico</td></tr>
+    </table>
+
+    <h4>Alertas</h4>
+    <table>
+        <tr><th>Método</th><th>Endpoint</th><th>Permissão</th><th>Descrição</th></tr>
+        <tr><td><span class="badge badge-green">GET</span></td><td><code>/v1/admin/alerts</code></td><td>Todos</td><td>Listar alertas</td></tr>
+        <tr><td><span class="badge badge-blue">POST</span></td><td><code>/v1/admin/alerts</code></td><td>admin, comunicacao</td><td>Criar alerta</td></tr>
+        <tr><td><span class="badge badge-blue">POST</span></td><td><code>/v1/admin/alerts/{id}/send</code></td><td>admin, comunicacao</td><td>Enviar alerta</td></tr>
+    </table>
+
+    <h3>4.3 Variáveis de Ambiente</h3>
+    <pre><code># Aplicação
+ENVIRONMENT=development|staging|production
+LOG_LEVEL=INFO
+
+# Banco de Dados
+DATABASE_URL=postgresql+asyncpg://cor:cor123@db:5432/cor_db
+
+# Redis
+REDIS_URL=redis://redis:6379/0
+
+# Celery
+CELERY_BROKER_URL=redis://redis:6379/1
+
+# Segurança
+JWT_SECRET_KEY=sua-chave-jwt-32-bytes-minimo
+JWT_ACCESS_TOKEN_EXPIRE_MINUTES=480
+
+# Firebase (Push Notifications)
+FCM_CREDENTIALS_JSON={"type":"service_account",...}
+
+# Cache TTLs (segundos)
+CACHE_TTL_WEATHER_NOW=60
+CACHE_TTL_RADAR=180
+CACHE_TTL_RAIN_GAUGES=120</code></pre>
+
+    <h2 id="admin"><span class="section-number">5.</span> Painel Administrativo (cor-admin)</h2>
+
+    <h3>5.1 Páginas e Funcionalidades</h3>
+    <table>
+        <tr><th>Página</th><th>Rota</th><th>Descrição</th></tr>
+        <tr><td>Dashboard</td><td><code>/dashboard</code></td><td>Status operacional e últimos alertas</td></tr>
+        <tr><td>Alertas</td><td><code>/alerts</code></td><td>Lista de todos os alertas</td></tr>
+        <tr><td>Criar Alerta</td><td><code>/alerts/new</code></td><td>Formulário + mapa para novo alerta</td></tr>
+        <tr><td>Detalhes</td><td><code>/alerts/[id]</code></td><td>Detalhes e estatísticas do alerta</td></tr>
+        <tr><td>Auditoria</td><td><code>/audit</code></td><td>Logs de auditoria (admin only)</td></tr>
+    </table>
+
+    <h3>5.2 Configuração</h3>
+    <p>Arquivo <code>.env.local</code>:</p>
+    <pre><code>NEXT_PUBLIC_API_URL=http://localhost:8000</code></pre>
+
+    <h3>5.3 Comandos</h3>
+    <pre><code># Instalar dependências
+npm install
+
+# Executar em desenvolvimento
+npm run dev
+
+# Build para produção
+npm run build && npm start</code></pre>
+
+    <h2 id="mobile"><span class="section-number">6.</span> Aplicativo Mobile (cor_app)</h2>
+
+    <h3>6.1 Informações do App</h3>
+    <table>
+        <tr><th>Campo</th><th>Valor</th></tr>
+        <tr><td>Nome</td><td>COR.AI</td></tr>
+        <tr><td>Bundle ID (iOS)</td><td><code>br.rio.cor.app</code></td></tr>
+        <tr><td>Package (Android)</td><td><code>br.rio.cor.app</code></td></tr>
+        <tr><td>Versão</td><td>1.0.0+1</td></tr>
+        <tr><td>SDK Flutter</td><td>>=3.2.0</td></tr>
+        <tr><td>Min SDK Android</td><td>23 (Android 6.0)</td></tr>
+    </table>
+
+    <h3>6.2 Funcionalidades</h3>
+    <ul>
+        <li><strong>Mapa Interativo:</strong> Incidentes, pluviômetros, sirenes, câmeras, radar</li>
+        <li><strong>Alertas:</strong> Inbox com notificações push geolocalizadas</li>
+        <li><strong>Bairros Favoritos:</strong> Personalização de alertas por região</li>
+        <li><strong>Configurações:</strong> Permissões, servidor, diagnósticos</li>
+    </ul>
+
+    <h3>6.3 Build</h3>
+    <pre><code># Build Android (APK)
+flutter clean && flutter pub get
+flutter build apk --release
+
+# Build iOS (IPA)
+flutter build ipa --release</code></pre>
+
+    <h2 id="banco"><span class="section-number">7.</span> Banco de Dados</h2>
+
+    <h3>7.1 Tabelas Principais</h3>
+    <table>
+        <tr><th>Tabela</th><th>Descrição</th></tr>
+        <tr><td><code>admin_users</code></td><td>Usuários administrativos</td></tr>
+        <tr><td><code>devices</code></td><td>Dispositivos móveis registrados</td></tr>
+        <tr><td><code>alerts</code></td><td>Alertas criados</td></tr>
+        <tr><td><code>alert_areas</code></td><td>Áreas geográficas dos alertas (PostGIS)</td></tr>
+        <tr><td><code>alert_deliveries</code></td><td>Registro de envios</td></tr>
+        <tr><td><code>operational_status_current</code></td><td>Status atual (singleton)</td></tr>
+        <tr><td><code>operational_status_history</code></td><td>Histórico de mudanças</td></tr>
+        <tr><td><code>audit_logs</code></td><td>Logs de auditoria</td></tr>
+    </table>
+
+    <h3>7.2 Comandos de Migração</h3>
+    <pre><code># Aplicar migrações
+docker compose exec api alembic upgrade head
+
+# Ver histórico
+docker compose exec api alembic history
+
+# Criar nova migração
+docker compose exec api alembic revision --autogenerate -m "descrição"</code></pre>
+
+    <h2 id="integracoes"><span class="section-number">8.</span> Integrações Externas</h2>
+
+    <h3>8.1 Sistema Alerta Rio</h3>
+    <table>
+        <tr><th>Endpoint</th><th>URL</th></tr>
+        <tr><td>Previsão Atual</td><td><code>http://www.sistema-alerta-rio.com.br/upload/xml/PrevisaoNew.xml</code></td></tr>
+        <tr><td>Previsão Estendida</td><td><code>http://www.sistema-alerta-rio.com.br/upload/xml/PrevisaoEstendida.xml</code></td></tr>
+    </table>
+
+    <h3>8.2 WebSirene Rio</h3>
+    <table>
+        <tr><th>Endpoint</th><th>URL</th></tr>
+        <tr><td>Pluviômetros</td><td><code>http://websirene.rio.rj.gov.br/xml/chuvas.xml</code></td></tr>
+        <tr><td>Sirenes</td><td><code>http://websirene.rio.rj.gov.br/xml/sirenes.xml</code></td></tr>
+    </table>
+
+    <h2 id="deploy"><span class="section-number">9.</span> Deploy e Infraestrutura</h2>
+
+    <h3>9.1 Docker Compose</h3>
+    <pre><code># Iniciar todos os serviços
+cd cor-api && docker compose up -d
+
+# Ver logs
+docker compose logs -f api
+
+# Parar serviços
+docker compose down</code></pre>
+
+    <h3>9.2 Checklist de Produção</h3>
+    <ul>
+        <li>☐ HTTPS configurado com certificado válido</li>
+        <li>☐ Senhas fortes em todas as credenciais</li>
+        <li>☐ <code>JWT_SECRET_KEY</code> com 32+ bytes aleatórios</li>
+        <li>☐ <code>ENVIRONMENT=production</code></li>
+        <li>☐ Firebase configurado com credenciais reais</li>
+        <li>☐ Backup automático do banco de dados</li>
+        <li>☐ Monitoramento de logs configurado</li>
+    </ul>
+
+    <h2 id="manutencao"><span class="section-number">10.</span> Manutenção e Troubleshooting</h2>
+
+    <h3>10.1 Comandos Úteis</h3>
+    <pre><code># Ver logs da API
+docker compose logs -f api
+
+# Ver logs do worker (push)
+docker compose logs -f worker
+
+# Limpar cache Redis
+docker compose exec redis redis-cli FLUSHALL
+
+# Testar health check
+curl http://localhost:8000/v1/health</code></pre>
+
+    <h3>10.2 Problemas Comuns</h3>
+    <table>
+        <tr><th>Problema</th><th>Solução</th></tr>
+        <tr><td>API não inicia</td><td>Verificar logs: <code>docker compose logs api</code></td></tr>
+        <tr><td>Push não chega</td><td>Verificar FCM configurado e logs do worker</td></tr>
+        <tr><td>Erro de migração</td><td>Rodar: <code>docker compose exec api alembic upgrade head</code></td></tr>
+        <tr><td>App não conecta</td><td>Verificar URL da API nas configurações do app</td></tr>
+    </table>
+
+    <hr>
+
+    <h2>Anexo: Cores dos Estágios</h2>
+    <table>
+        <tr><th>Estágio</th><th>Cor</th><th>Hex</th><th>Descrição</th></tr>
+        <tr><td>1</td><td><span class="badge badge-green">Verde</span></td><td>#4CAF50</td><td>Normal</td></tr>
+        <tr><td>2</td><td><span class="badge badge-yellow">Amarelo</span></td><td>#FFEB3B</td><td>Atenção</td></tr>
+        <tr><td>3</td><td><span class="badge badge-orange">Laranja</span></td><td>#FF9800</td><td>Alerta</td></tr>
+        <tr><td>4</td><td><span class="badge badge-red">Vermelho</span></td><td>#F44336</td><td>Crítico</td></tr>
+        <tr><td>5</td><td><span class="badge badge-purple">Roxo</span></td><td>#9C27B0</td><td>Emergência</td></tr>
+    </table>
+
+    <hr>
+
+    <p style="text-align: center; color: #64748b; margin-top: 40px;">
+        <strong>FIM DO DOCUMENTO</strong><br>
+        Documento gerado em 27/01/2026 | Versão 1.0<br>
+        <span class="badge badge-red">CONFIDENCIAL - USO INTERNO</span>
+    </p>
+
+</body>
+</html>

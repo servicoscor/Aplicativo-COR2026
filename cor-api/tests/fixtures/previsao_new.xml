@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<previsoes Createdate="2024-01-15T10:00:00.000000">
+    <previsao ceu="Nublado" condicaoIcon="nub_chuva.gif" datePeriodo="2024-01-15" dirVento="E/SE" periodo="Manhã" precipitacao="Pancadas de chuva isoladas" temperatura="Estável" velVento="Fraco a Moderado"/>
+    <previsao ceu="Parcialmente Nublado" condicaoIcon="parc_nub.gif" datePeriodo="2024-01-15" dirVento="SE" periodo="Tarde" precipitacao="Sem chuva" temperatura="Em elevação" velVento="Moderado"/>
+    <previsao ceu="Claro" condicaoIcon="claro.gif" datePeriodo="2024-01-15" dirVento="S/SE" periodo="Noite" precipitacao="Sem chuva" temperatura="Em declínio" velVento="Fraco"/>
+    <previsao ceu="Nublado" condicaoIcon="nub.gif" datePeriodo="2024-01-16" dirVento="E" periodo="Madrugada" precipitacao="Possibilidade de chuva fraca" temperatura="Estável" velVento="Fraco"/>
+
+    <quadroSinotico Createdate="2024-01-15T09:30:00" sinotico="Um sistema frontal se aproxima do litoral do estado do Rio de Janeiro, trazendo instabilidade e possibilidade de chuvas fracas a moderadas ao longo do dia. A temperatura deve permanecer amena."/>
+
+    <Temperatura data="2024-01-15">
+        <Zona maxima="32" minima="22" zona="Zona Norte"/>
+        <Zona maxima="30" minima="23" zona="Zona Sul"/>
+        <Zona maxima="31" minima="21" zona="Centro"/>
+        <Zona maxima="34" minima="20" zona="Zona Oeste"/>
+        <Zona maxima="29" minima="24" zona="Grande Tijuca"/>
+    </Temperatura>
+
+    <TabuasMares>
+        <tabua altura="0.3" date="2024-01-15T05:30:00" elevacao="Baixa"/>
+        <tabua altura="1.2" date="2024-01-15T11:45:00" elevacao="Alta"/>
+        <tabua altura="0.4" date="2024-01-15T18:00:00" elevacao="Baixa"/>
+        <tabua altura="1.1" date="2024-01-16T00:15:00" elevacao="Alta"/>
+    </TabuasMares>
+</previsoes>

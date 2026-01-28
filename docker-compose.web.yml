@@ -1,0 +1,99 @@
+version: "3.8"
+
+services:
+  web:
+    build: ./cor-web
+    container_name: cor-web
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    depends_on:
+      - api
+    networks:
+      - cor-network
+
+  api:
+    build: ./cor-api
+    container_name: cor-api
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://cor:cor123@postgres:5432/cor_db
+      - DATABASE_URL_SYNC=postgresql://cor:cor123@postgres:5432/cor_db
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/1
+      - CELERY_RESULT_BACKEND=redis://redis:6379/1
+      - API_KEY_ENABLED=true
+      - API_KEY=cor-admin-key-2024
+      - LOG_LEVEL=INFO
+      - ENVIRONMENT=development
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    volumes:
+      - ./cor-api/app:/app/app:ro
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    networks:
+      - cor-network
+
+  postgres:
+    image: postgis/postgis:16-3.4
+    container_name: cor-postgres
+    environment:
+      - POSTGRES_USER=cor
+      - POSTGRES_PASSWORD=cor123
+      - POSTGRES_DB=cor_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cor -d cor_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - cor-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: cor-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - cor-network
+
+  worker:
+    build: ./cor-api
+    container_name: cor-worker
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://cor:cor123@postgres:5432/cor_db
+      - DATABASE_URL_SYNC=postgresql://cor:cor123@postgres:5432/cor_db
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/1
+      - CELERY_RESULT_BACKEND=redis://redis:6379/1
+      - LOG_LEVEL=INFO
+      - ENVIRONMENT=development
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    volumes:
+      - ./cor-api/app:/app/app:ro
+    command: celery -A app.jobs.celery_app worker --loglevel=info
+    networks:
+      - cor-network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  cor-network:
+    driver: bridge

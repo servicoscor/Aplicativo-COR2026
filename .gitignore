@@ -1,0 +1,191 @@
+# ================================
+# COR.AI Project - .gitignore
+# ================================
+
+# ================================
+# OS Files
+# ================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# ================================
+# IDE / Editor
+# ================================
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+*.code-workspace
+
+# ================================
+# Flutter / Dart
+# ================================
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+build/
+*.iml
+.metadata
+pubspec.lock
+
+# Flutter iOS
+**/ios/Pods/
+**/ios/.symlinks/
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/ephemeral/
+**/ios/Flutter/App.framework/
+**/ios/ServiceDefinitions.json
+**/Runner/GeneratedPluginRegistrant.*
+
+# Flutter Android
+**/.gradle/
+**/app/debug/
+**/app/profile/
+**/app/release/
+**/local.properties
+**/key.properties
+*.jks
+
+# Firebase configs (contains sensitive info)
+**/GoogleService-Info.plist
+**/google-services.json
+**/firebase_options.dart
+
+# ================================
+# Python
+# ================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+.env
+*.env
+.env.local
+.env.*.local
+
+# Python build
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Pytest
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# Mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# ================================
+# Node.js
+# ================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.yarn-integrity
+package-lock.json
+
+# Next.js
+.next/
+out/
+
+# Build outputs
+dist/
+
+# ================================
+# Docker
+# ================================
+*.log
+docker-compose.override.yml
+
+# ================================
+# Database
+# ================================
+*.db
+*.sqlite
+*.sqlite3
+postgres_data/
+redis_data/
+
+# ================================
+# Secrets / Credentials
+# ================================
+*.pem
+*.key
+*.crt
+*.p12
+secrets/
+credentials/
+.secrets
+*.secret
+
+# ================================
+# Logs
+# ================================
+logs/
+*.log
+celerybeat-schedule
+celerybeat.pid
+
+# ================================
+# Temporary files
+# ================================
+tmp/
+temp/
+.tmp/
+.temp/
+*.tmp
+*.temp
+*.bak
+*.backup
+
+# ================================
+# Coverage reports
+# ================================
+coverage/
+*.lcov
+.nyc_output/
+
+# ================================
+# Misc
+# ================================
+.cache/
+*.pid
+*.seed
+*.pid.lock

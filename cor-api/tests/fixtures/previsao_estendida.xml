@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<previsoesEstendidas Createdate="2024-01-15T10:00:00.000000">
+    <previsaoEstendida ceu="Nublado" condicaoIcon="nub_chuva.gif" data="2024-01-16" dirVento="E/SE" maxTemp="32" minTemp="22" precipitacao="Chuva fraca a moderada" temperatura="Estável" velVento="Fraco a Moderado"/>
+    <previsaoEstendida ceu="Parcialmente Nublado" condicaoIcon="parc_nub.gif" data="2024-01-17" dirVento="SE" maxTemp="34" minTemp="23" precipitacao="Pancadas de chuva isoladas" temperatura="Em elevação" velVento="Moderado"/>
+    <previsaoEstendida ceu="Claro" condicaoIcon="claro.gif" data="2024-01-18" dirVento="NE" maxTemp="36" minTemp="24" precipitacao="Sem chuva" temperatura="Em elevação" velVento="Fraco"/>
+    <previsaoEstendida ceu="Parcialmente Nublado" condicaoIcon="parc_nub.gif" data="2024-01-19" dirVento="E" maxTemp="35" minTemp="25" precipitacao="Possibilidade de chuva isolada" temperatura="Estável" velVento="Fraco a Moderado"/>
+</previsoesEstendidas>
