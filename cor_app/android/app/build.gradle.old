@@ -32,7 +32,7 @@ if (flutterVersionName == null) {
 
 android {
     namespace "br.rio.cor.app"
-    compileSdk 34
+    compileSdk 36
     ndkVersion flutter.ndkVersion
 
     compileOptions {
@@ -63,7 +63,7 @@ android {
     defaultConfig {
         applicationId "br.rio.cor.app"
         minSdkVersion flutter.minSdkVersion
-        targetSdk 34
+        targetSdk 36
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
