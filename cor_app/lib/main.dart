@@ -22,7 +22,6 @@ void main() async {
   // Configura orientação (apenas portrait)
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
   ]);
 
   // Configura estilo da status bar

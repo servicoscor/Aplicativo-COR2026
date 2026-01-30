@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:webview_flutter_android/webview_flutter_android.dart';
 import '../../../../core/models/camera_model.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../widgets/camera_marker.dart';
@@ -25,6 +26,8 @@ class _CameraPlayerScreenState extends State<CameraPlayerScreen> {
   bool _hasError = false;
   String? _errorMessage;
   bool _showInfo = true;
+  static const double _cameraCssScale = 0.08;
+  static const double _viewScale = 0.97;
 
   @override
   void initState() {
@@ -48,9 +51,6 @@ class _CameraPlayerScreenState extends State<CameraPlayerScreen> {
   void _restoreOrientation() {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.landscapeRight,
     ]);
     SystemChrome.setEnabledSystemUIMode(
       SystemUiMode.edgeToEdge,
@@ -90,34 +90,67 @@ class _CameraPlayerScreenState extends State<CameraPlayerScreen> {
         ),
       )
       ..loadRequest(Uri.parse(widget.camera.streamUrl));
+
+    final platformController = _controller.platform;
+    if (platformController is AndroidWebViewController) {
+      platformController.setMediaPlaybackRequiresUserGesture(false);
+      platformController.enableZoom(false);
+      platformController.setTextZoom(100);
+      platformController.setUseWideViewPort(true);
+    }
   }
 
   void _injectFullscreenStyles() {
+    final scale = _cameraCssScale.toStringAsFixed(2);
     _controller.runJavaScript('''
       (function() {
-        document.body.style.margin = '0';
-        document.body.style.padding = '0';
-        document.body.style.overflow = 'hidden';
-        document.body.style.backgroundColor = 'black';
+        var scale = $scale;
+        function applyScale() {
+          var style = document.getElementById('cor-scale-style');
+          if (!style) {
+            style = document.createElement('style');
+            style.id = 'cor-scale-style';
+            document.head.appendChild(style);
+          }
+          style.textContent = `
+            html, body {
+              width: 100% !important;
+              height: 100% !important;
+              margin: 0 !important;
+              padding: 0 !important;
+              overflow: hidden !important;
+              background: #000 !important;
+              zoom: ${scale} !important;
+            }
+            video, iframe, img, canvas {
+              position: fixed !important;
+              top: 50% !important;
+              left: 50% !important;
+              width: 100vh !important;
+              height: 100vw !important;
+              transform: translate(-50%, -50%) rotate(90deg) !important;
+              transform-origin: center center !important;
+              object-fit: contain !important;
+              border: none !important;
+              background: #000 !important;
+            }
+          `;
 
-        var video = document.querySelector('video');
-        if (video) {
-          video.style.width = '100vw';
-          video.style.height = '100vh';
-          video.style.objectFit = 'contain';
-          video.style.position = 'fixed';
-          video.style.top = '0';
-          video.style.left = '0';
+          var meta = document.querySelector('meta[name="viewport"]');
+          if (!meta) {
+            meta = document.createElement('meta');
+            meta.name = 'viewport';
+            document.head.appendChild(meta);
+          }
+          meta.setAttribute(
+            'content',
+            'width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'
+          );
         }
 
-        var iframe = document.querySelector('iframe');
-        if (iframe) {
-          iframe.style.width = '100vw';
-          iframe.style.height = '100vh';
-          iframe.style.position = 'fixed';
-          iframe.style.top = '0';
-          iframe.style.left = '0';
-          iframe.style.border = 'none';
+        applyScale();
+        if (!window.__corScaleInterval) {
+          window.__corScaleInterval = setInterval(applyScale, 800);
         }
       })();
     ''');
@@ -153,10 +186,23 @@ class _CameraPlayerScreenState extends State<CameraPlayerScreen> {
       body: GestureDetector(
         onTap: _toggleInfo,
         child: Stack(
+          fit: StackFit.expand,
           children: [
             // WebView com o stream
             if (!_hasError)
-              WebViewWidget(controller: _controller),
+              Positioned.fill(
+                child: ClipRect(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Transform.scale(
+                      scale: _viewScale,
+                      child: SizedBox.expand(
+                        child: WebViewWidget(controller: _controller),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
 
             // Tela de erro
             if (_hasError)

@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart' as fm;
@@ -5,6 +6,7 @@ import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/config/app_config.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/models/models.dart';
@@ -37,23 +39,39 @@ class MapScreen extends ConsumerStatefulWidget {
   ConsumerState<MapScreen> createState() => _MapScreenState();
 }
 
-class _MapScreenState extends ConsumerState<MapScreen> {
+class _MapScreenState extends ConsumerState<MapScreen>
+    with SingleTickerProviderStateMixin {
   late final fm.MapController _mapController;
   bool _isWeatherExpanded = false;
+  late final AnimationController _carnavalPulseController;
+  late final Animation<double> _carnavalPulse;
+  bool _hasCenteredOnUser = false;
 
   // Centro do Rio de Janeiro
   static const _rioCenter = LatLng(-22.9068, -43.1729);
   static const _defaultZoom = 11.0;
+  static const _carnavalImagePath = 'assets/images/carnaval2026.jpg';
+  static const _carnavalAppUrl =
+      'https://play.google.com/store/apps/details?id=br.com.roadmaps.BlocosRio2025';
 
   @override
   void initState() {
     super.initState();
     _mapController = fm.MapController();
+    _carnavalPulseController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1400),
+    )..repeat(reverse: true);
+    _carnavalPulse = CurvedAnimation(
+      parent: _carnavalPulseController,
+      curve: Curves.easeInOut,
+    );
 
     // Solicita localização ao iniciar e configura listeners
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(mapControllerProvider.notifier).getUserLocation();
       _setupFocusCommandListener();
+      _setupUserLocationListener();
       _triggerInitialBboxFetch();
     });
   }
@@ -86,6 +104,20 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     });
   }
 
+  void _setupUserLocationListener() {
+    ref.listenManual<LatLng?>(userLocationProvider, (previous, next) {
+      if (next == null) return;
+      if (_hasCenteredOnUser) return;
+      if (widget.highlightArea != null) return;
+
+      _hasCenteredOnUser = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        _mapController.move(next, 14);
+      });
+    });
+  }
+
   /// Executa comando de foco no mapa
   void _handleFocusCommand(MapFocusCommand command) {
     if (command.bounds != null) {
@@ -106,6 +138,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   @override
   void dispose() {
     _mapController.dispose();
+    _carnavalPulseController.dispose();
     super.dispose();
   }
 
@@ -117,6 +150,219 @@ class _MapScreenState extends ConsumerState<MapScreen> {
       // Solicita localização se não tiver
       ref.read(mapControllerProvider.notifier).getUserLocation();
     }
+  }
+
+  Future<void> _openCarnivalAppLink() async {
+    final uri = Uri.parse(_carnavalAppUrl);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Nao foi possivel abrir o link do app.')),
+      );
+    }
+  }
+
+  void _showCarnivalModal() {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: true,
+      barrierColor: Colors.black.withOpacity(0.45),
+      builder: (context) {
+        return Material(
+          type: MaterialType.transparency,
+          child: Stack(
+            children: [
+              BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+                child: Container(color: Colors.black.withOpacity(0.2)),
+              ),
+              Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 380),
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Color(0xFFFFD54F),
+                          Color(0xFFFF6B35),
+                          Color(0xFFEF4444),
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(AppRadius.xl),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.4),
+                          blurRadius: 24,
+                          offset: const Offset(0, 12),
+                        ),
+                      ],
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(2),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(AppRadius.xl - 2),
+                        child: Material(
+                          color: AppColors.surface,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Stack(
+                                children: [
+                                  InkWell(
+                                    onTap: () async {
+                                      Navigator.of(context).pop();
+                                      await _openCarnivalAppLink();
+                                    },
+                                    child: Image.asset(
+                                      _carnavalImagePath,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (context, error, stackTrace) {
+                                        return Container(
+                                          color: AppColors.surface,
+                                          padding: const EdgeInsets.all(24),
+                                          alignment: Alignment.center,
+                                          child: const Text(
+                                            'Imagem do Carnaval nao encontrada.',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(color: AppColors.textPrimary),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  Positioned(
+                                    right: 8,
+                                    top: 8,
+                                    child: Material(
+                                      color: Colors.black.withOpacity(0.6),
+                                      shape: const CircleBorder(),
+                                      child: IconButton(
+                                        icon: const Icon(
+                                          Icons.close,
+                                          color: Colors.white,
+                                          size: 20,
+                                        ),
+                                        onPressed: () => Navigator.of(context).pop(),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.all(12),
+                                color: AppColors.surface,
+                                child: Row(
+                                  children: [
+                                    const Icon(
+                                      LucideIcons.sparkles,
+                                      color: AppColors.accent,
+                                      size: 18,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    const Expanded(
+                                      child: Text(
+                                        'Toque no banner para instalar o app do Carnaval.',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: AppColors.textSecondary,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    ElevatedButton(
+                                      onPressed: () async {
+                                        Navigator.of(context).pop();
+                                        await _openCarnivalAppLink();
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: AppColors.accent,
+                                        foregroundColor: Colors.white,
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 12,
+                                          vertical: 10,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(AppRadius.md),
+                                        ),
+                                      ),
+                                      child: const Text('Instalar'),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildCarnivalButton() {
+    return AnimatedBuilder(
+      animation: _carnavalPulse,
+      builder: (context, child) {
+        final glowOpacity = 0.35 + (0.35 * _carnavalPulse.value);
+        final blur = 16 + (12 * _carnavalPulse.value);
+        final spread = 1 + (3 * _carnavalPulse.value);
+        return Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.accent.withOpacity(glowOpacity),
+                blurRadius: blur,
+                spreadRadius: spread,
+              ),
+            ],
+          ),
+          child: child,
+        );
+      },
+      child: Material(
+        color: Colors.transparent,
+        shape: const CircleBorder(),
+        child: Ink(
+          width: 44,
+          height: 44,
+          decoration: const BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFFFFD54F),
+                Color(0xFFFF6B35),
+                Color(0xFFEF4444),
+              ],
+            ),
+          ),
+          child: InkWell(
+            customBorder: const CircleBorder(),
+            onTap: _showCarnivalModal,
+            child: const Center(
+              child: Icon(
+                LucideIcons.partyPopper,
+                color: Colors.white,
+                size: 22,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   void _centerOnLocation(LatLng location) {
@@ -664,6 +910,13 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                     )
                   : const Icon(LucideIcons.refreshCw, color: AppColors.textPrimary),
             ),
+          ),
+
+          // Botao do Carnaval (modal promocional)
+          Positioned(
+            right: AppSpacing.md,
+            bottom: 300,
+            child: _buildCarnivalButton(),
           ),
 
           // Indicador de loading inicial
