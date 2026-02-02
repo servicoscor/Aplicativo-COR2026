@@ -5,10 +5,12 @@ import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/config/app_config.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/models/models.dart';
 import '../../../../core/services/camera_service.dart';
+import '../../../../core/services/status_service.dart';
 import '../controllers/map_controller.dart';
 import '../widgets/incident_marker.dart';
 import '../widgets/rain_gauge_marker.dart';
@@ -37,9 +39,13 @@ class MapScreen extends ConsumerStatefulWidget {
   ConsumerState<MapScreen> createState() => _MapScreenState();
 }
 
-class _MapScreenState extends ConsumerState<MapScreen> {
+class _MapScreenState extends ConsumerState<MapScreen>
+    with SingleTickerProviderStateMixin {
   late final fm.MapController _mapController;
   bool _isWeatherExpanded = false;
+  late final AnimationController _eventPulseController;
+  late final Animation<double> _eventPulseScale;
+  late final Animation<double> _eventPulseOpacity;
 
   // Centro do Rio de Janeiro
   static const _rioCenter = LatLng(-22.9068, -43.1729);
@@ -49,12 +55,24 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   void initState() {
     super.initState();
     _mapController = fm.MapController();
+    _eventPulseController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+    )..repeat(reverse: true);
+    _eventPulseScale = Tween<double>(begin: 1.0, end: 1.08).animate(
+      CurvedAnimation(parent: _eventPulseController, curve: Curves.easeInOut),
+    );
+    _eventPulseOpacity = Tween<double>(begin: 0.92, end: 1.0).animate(
+      CurvedAnimation(parent: _eventPulseController, curve: Curves.easeInOut),
+    );
 
     // Solicita localização ao iniciar e configura listeners
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(mapControllerProvider.notifier).getUserLocation();
       _setupFocusCommandListener();
       _triggerInitialBboxFetch();
+      // Garante refresh do status ao abrir a tela do mapa
+      ref.read(statusControllerProvider.notifier).refresh();
     });
   }
 
@@ -105,6 +123,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
 
   @override
   void dispose() {
+    _eventPulseController.dispose();
     _mapController.dispose();
     super.dispose();
   }
@@ -198,6 +217,125 @@ class _MapScreenState extends ConsumerState<MapScreen> {
         duration: const Duration(seconds: 3),
       ),
     );
+  }
+
+  void _showCarnavalModal() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) {
+        return Dialog(
+          backgroundColor: AppColors.surface,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppRadius.lg),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 56,
+                  height: 56,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: LinearGradient(
+                      colors: [
+                        Color(0xFF00E5FF), // azul elétrico
+                        Color(0xFFFFC400), // dourado
+                        Color(0xFFFF4081), // rosa vibrante
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                  ),
+                  child: const Icon(
+                    Icons.celebration,
+                    color: Colors.white,
+                    size: 28,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.md),
+                const Text(
+                  'Blocos do Rio 2026',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                const Text(
+                  'Baixe o app oficial e acompanhe os blocos em tempo real.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: AppColors.textMuted,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.lg),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: () => _launchExternalUrl(
+                          'https://apps.apple.com/br/app/blocos-do-rio-2026/id6740534225',
+                        ),
+                        icon: const Icon(LucideIcons.apple),
+                        label: const Text('App Store'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primary,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(AppRadius.md),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: () => _launchExternalUrl(
+                          'https://play.google.com/store/apps/details?id=br.com.roadmaps.BlocosRio2025&pcampaignid=web_share',
+                        ),
+                        icon: const Icon(LucideIcons.play),
+                        label: const Text('Google Play'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.surface,
+                          foregroundColor: AppColors.textPrimary,
+                          side: const BorderSide(color: AppColors.divider),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(AppRadius.md),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.md),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text(
+                    'Agora não',
+                    style: TextStyle(color: AppColors.textMuted),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _launchExternalUrl(String url) async {
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
   }
 
   void _openCameraPlayer(Camera camera) {
@@ -663,6 +801,58 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                       ),
                     )
                   : const Icon(LucideIcons.refreshCw, color: AppColors.textPrimary),
+            ),
+          ),
+
+          // Botão de evento (Carnaval)
+          Positioned(
+            right: AppSpacing.md,
+            bottom: 300,
+            child: Tooltip(
+              message: 'Carnaval 2026',
+              child: Material(
+                color: Colors.transparent,
+                child: ScaleTransition(
+                  scale: _eventPulseScale,
+                  child: FadeTransition(
+                    opacity: _eventPulseOpacity,
+                    child: Ink(
+                      width: 40,
+                      height: 40,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: LinearGradient(
+                          colors: [
+                            Color(0xFF00E5FF), // azul elétrico
+                            Color(0xFFFFC400), // dourado
+                            Color(0xFFFF4081), // rosa vibrante
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color(0x66000000),
+                            blurRadius: 8,
+                            offset: Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: InkWell(
+                        customBorder: const CircleBorder(),
+                        onTap: _showCarnavalModal,
+                        child: const Center(
+                          child: Icon(
+                            Icons.celebration,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ),
           ),
 

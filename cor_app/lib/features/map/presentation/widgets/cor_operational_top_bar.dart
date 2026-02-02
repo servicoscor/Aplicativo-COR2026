@@ -58,6 +58,7 @@ class CorOperationalTopBar extends ConsumerWidget {
                   if (status != null) ...[
                     // Badge Estágio da Cidade
                     _StageBadge(
+                      key: ValueKey('stage_${status.cityStage.number}'),
                       stage: status.cityStage,
                       onTap: () => _showStageDetails(context, status.cityStage),
                     ),
@@ -66,6 +67,7 @@ class CorOperationalTopBar extends ConsumerWidget {
 
                     // Badge Nível de Calor
                     _HeatBadge(
+                      key: ValueKey('heat_${status.heatLevel.number}'),
                       level: status.heatLevel,
                       onTap: () => _showHeatDetails(context, status.heatLevel),
                     ),
@@ -151,6 +153,7 @@ class _StageBadge extends StatefulWidget {
   final VoidCallback onTap;
 
   const _StageBadge({
+    super.key,
     required this.stage,
     required this.onTap,
   });
@@ -241,6 +244,7 @@ class _HeatBadge extends StatefulWidget {
   final VoidCallback onTap;
 
   const _HeatBadge({
+    super.key,
     required this.level,
     required this.onTap,
   });

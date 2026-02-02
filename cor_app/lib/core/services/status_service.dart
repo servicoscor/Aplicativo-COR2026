@@ -22,6 +22,10 @@ class StatusService {
         '/v1/status/operational',
       );
 
+      if (kDebugMode) {
+        print('[StatusService] Resposta: $response');
+      }
+
       if (response['success'] == true && response['data'] != null) {
         return OperationalStatus.fromJson(response['data']);
       }

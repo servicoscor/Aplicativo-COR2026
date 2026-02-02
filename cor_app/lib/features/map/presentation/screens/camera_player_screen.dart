@@ -95,30 +95,77 @@ class _CameraPlayerScreenState extends State<CameraPlayerScreen> {
   void _injectFullscreenStyles() {
     _controller.runJavaScript('''
       (function() {
-        document.body.style.margin = '0';
-        document.body.style.padding = '0';
-        document.body.style.overflow = 'hidden';
-        document.body.style.backgroundColor = 'black';
+        var style = document.createElement('style');
+        style.innerHTML = `
+          html, body {
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            overflow: hidden !important;
+            background: black !important;
+          }
+          video, iframe, img, canvas {
+            position: fixed !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform-origin: center center !important;
+            border: none !important;
+            background: black !important;
+          }
+        `;
+        document.head.appendChild(style);
 
-        var video = document.querySelector('video');
-        if (video) {
-          video.style.width = '100vw';
-          video.style.height = '100vh';
-          video.style.objectFit = 'contain';
-          video.style.position = 'fixed';
-          video.style.top = '0';
-          video.style.left = '0';
+        var viewport = document.querySelector('meta[name="viewport"]');
+        if (!viewport) {
+          viewport = document.createElement('meta');
+          viewport.name = 'viewport';
+          document.head.appendChild(viewport);
+        }
+        viewport.content = 'width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
+
+        function pickMedia() {
+          return document.querySelector('video') ||
+                 document.querySelector('img') ||
+                 document.querySelector('canvas') ||
+                 document.querySelector('iframe');
         }
 
-        var iframe = document.querySelector('iframe');
-        if (iframe) {
-          iframe.style.width = '100vw';
-          iframe.style.height = '100vh';
-          iframe.style.position = 'fixed';
-          iframe.style.top = '0';
-          iframe.style.left = '0';
-          iframe.style.border = 'none';
+        function getSize(el) {
+          if (!el) return null;
+          var w = el.videoWidth || el.naturalWidth || el.width || el.clientWidth;
+          var h = el.videoHeight || el.naturalHeight || el.height || el.clientHeight;
+          if (!w || !h) {
+            var rect = el.getBoundingClientRect();
+            w = rect.width;
+            h = rect.height;
+          }
+          if (!w || !h) return null;
+          return { w: w, h: h };
         }
+
+        function fitContain() {
+          var el = pickMedia();
+          if (!el) return;
+          var size = getSize(el);
+          if (!size) return;
+          var vw = window.innerWidth;
+          var vh = window.innerHeight;
+          var scale = Math.min(vw / size.w, vh / size.h);
+          el.style.width = size.w + 'px';
+          el.style.height = size.h + 'px';
+          el.style.transform = 'translate(-50%, -50%) scale(' + scale + ')';
+        }
+
+        fitContain();
+        var attempts = 0;
+        var timer = setInterval(function() {
+          attempts++;
+          fitContain();
+          if (attempts > 12) clearInterval(timer);
+        }, 300);
+
+        window.addEventListener('resize', fitContain);
       })();
     ''');
   }
@@ -161,14 +208,6 @@ class _CameraPlayerScreenState extends State<CameraPlayerScreen> {
             // Tela de erro
             if (_hasError)
               _buildErrorView(),
-
-            // Loading indicator
-            if (_isLoading && !_hasError)
-              const Center(
-                child: CircularProgressIndicator(
-                  color: AppColors.primary,
-                ),
-              ),
 
             // BOTÃO FECHAR - SEMPRE VISÍVEL
             Positioned(
