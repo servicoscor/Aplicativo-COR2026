@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import '../../../../l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:lucide_icons/lucide_icons.dart';
@@ -528,7 +529,7 @@ class _CityNowPanelState extends ConsumerState<CityNowPanel>
                   widget.onViewOnMap?.call(card.location!);
                 },
                 icon: const Icon(LucideIcons.mapPin, size: 14),
-                label: const Text('Ver no mapa'),
+                label: Text(AppLocalizations.of(context)!.viewOnMap),
                 style: TextButton.styleFrom(
                   foregroundColor: card.color,
                   padding: const EdgeInsets.symmetric(vertical: 4),

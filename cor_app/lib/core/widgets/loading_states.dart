@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../l10n/app_localizations.dart';
 import 'package:shimmer/shimmer.dart';
 import '../theme/app_theme.dart';
 
@@ -193,7 +194,7 @@ class ErrorState extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.lg),
             Text(
-              'Ops! Algo deu errado',
+              AppLocalizations.of(context)!.errorGenericTitle,
               style: Theme.of(context).textTheme.headlineSmall,
               textAlign: TextAlign.center,
             ),
@@ -210,7 +211,7 @@ class ErrorState extends StatelessWidget {
               ElevatedButton.icon(
                 onPressed: onRetry,
                 icon: const Icon(Icons.refresh),
-                label: const Text('Tentar novamente'),
+                label: Text(AppLocalizations.of(context)!.retry),
               ),
             ],
           ],

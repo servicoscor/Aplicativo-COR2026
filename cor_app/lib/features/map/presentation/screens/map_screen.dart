@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../../core/config/app_config.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/models/models.dart';
@@ -158,7 +159,7 @@ class _MapScreenState extends ConsumerState<MapScreen>
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     } else if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Nao foi possivel abrir o link do app.')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.appLinkError)),
       );
     }
   }
@@ -290,7 +291,7 @@ class _MapScreenState extends ConsumerState<MapScreen>
                                           borderRadius: BorderRadius.circular(AppRadius.md),
                                         ),
                                       ),
-                                      child: const Text('Instalar'),
+                                      child: Text(AppLocalizations.of(context)!.install),
                                     ),
                                   ],
                                 ),

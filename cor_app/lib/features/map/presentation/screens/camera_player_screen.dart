@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../../core/models/camera_model.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../widgets/camera_marker.dart';
@@ -423,7 +424,7 @@ class _CameraPlayerScreenState extends State<CameraPlayerScreen> {
               OutlinedButton.icon(
                 onPressed: () => Navigator.of(context).pop(),
                 icon: const Icon(LucideIcons.arrowLeft, size: 18),
-                label: const Text('Voltar'),
+                label: Text(AppLocalizations.of(context)!.back),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: Colors.white,
                   side: const BorderSide(color: Colors.white54),
@@ -439,7 +440,7 @@ class _CameraPlayerScreenState extends State<CameraPlayerScreen> {
                   _controller.reload();
                 },
                 icon: const Icon(LucideIcons.refreshCw, size: 18),
-                label: const Text('Tentar novamente'),
+                label: Text(AppLocalizations.of(context)!.retry),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
                   foregroundColor: Colors.white,

@@ -1,0 +1,160 @@
+{
+  "@@locale": "pt",
+  "appTitle": "COR.AI",
+  "settingsTitle": "Configurações",
+  "languageSectionTitle": "Idioma",
+  "languageLabel": "Idioma do app",
+  "languagePortuguese": "Português (Brasil)",
+  "languageEnglish": "English",
+  "languageSpanish": "Español",
+  "languageChinese": "中文（简体）"
+  ,
+  "navMap": "Mapa",
+  "navCity": "Cidade",
+  "navNetworks": "Redes",
+  "navFavorites": "Favoritos",
+  "navConfig": "Config",
+  "socialTitle": "Redes Sociais do COR",
+  "socialXLabel": "X (Twitter)",
+  "socialInstagramLabel": "Instagram",
+  "socialFacebookLabel": "Facebook"
+  ,
+  "alertsTitle": "Cidade",
+  "unreadCountLabel": "{count, plural, =1{# não lido} other{# não lidos}}",
+  "@unreadCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "filterUnread": "Não lidos",
+  "filterEmergency": "Emergência",
+  "filterAlert": "Alerta",
+  "filterInfo": "Info",
+  "clear": "Limpar",
+  "emptyAlertsTitle": "Nenhum alerta",
+  "emptyAlertsSubtitle": "Você não possui alertas no momento.\nQuando houver novidades, você será notificado.",
+  "refresh": "Atualizar",
+  "noResultsTitle": "Nenhum resultado",
+  "noResultsSubtitle": "Nenhum alerta corresponde aos filtros selecionados.",
+  "clearFilters": "Limpar Filtros"
+  ,
+  "favoritesTitle": "Meus Bairros",
+  "favoritesInstruction": "Adicione seus bairros favoritos para receber alertas personalizados, mesmo quando a localização não estiver disponível.",
+  "favoritesSearchHint": "Buscar bairro...",
+  "favoritesEmptyTitle": "Nenhum bairro favorito",
+  "favoritesEmptySubtitle": "Use a busca acima para adicionar bairros à sua lista de favoritos.",
+  "favoritesRemoveTitle": "Remover bairro?",
+  "favoritesRemoveBody": "Deseja remover \"{name}\" dos seus bairros favoritos?",
+  "@favoritesRemoveBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "cancel": "Cancelar",
+  "remove": "Remover"
+  ,
+  "appLinkError": "Não foi possível abrir o link do app.",
+  "install": "Instalar"
+  ,
+  "sectionPermissions": "Permissões",
+  "permissionLocationTitle": "Localização",
+  "permissionGranted": "Permissão concedida",
+  "permissionLocationNeeded": "Permissão necessária para alertas locais",
+  "permissionNotificationsTitle": "Notificações",
+  "permissionNotificationsNeeded": "Permissão necessária para receber alertas",
+  "sectionAlerts": "Alertas",
+  "sectionServer": "Servidor",
+  "sectionSystemStatus": "Status do Sistema",
+  "sectionDiagnostics": "Teste de Conexão",
+  "sectionAbout": "Sobre",
+  "allow": "Permitir",
+  "neighborhoodAlertsTitle": "Alertas por bairro",
+  "neighborhoodAlertsSubtitle": "Escolha os bairros que deseja receber alertas",
+  "apiUrlLabel": "URL da API",
+  "apiUrlHint": "http://10.0.2.2:8000",
+  "invalidUrl": "URL inválida. Use http:// ou https://",
+  "save": "Salvar",
+  "systemFirebase": "Firebase",
+  "statusOk": "OK",
+  "statusNotConfigured": "NÃO CONFIGURADO",
+  "systemFcmToken": "FCM Token",
+  "statusPresent": "Presente",
+  "statusAbsent": "Ausente",
+  "systemLastRegister": "Último Register",
+  "statusSuccess": "Sucesso",
+  "statusFailure": "Falha",
+  "statusNever": "Nunca",
+  "testConnectionTitle": "Testar Conexão",
+  "testConnectionSubtitle": "Verifica status da API /v1/health",
+  "test": "Testar",
+  "connectionOk": "Conexão OK",
+  "connectionFailed": "Falha na conexão",
+  "statusLabel": "Status",
+  "versionLabel": "Versão",
+  "databaseLabel": "Database",
+  "cacheLabel": "Cache",
+  "registeredDeviceTitle": "Dispositivo Registrado",
+  "deviceIdLabel": "ID",
+  "devicePlatformLabel": "Plataforma",
+  "deviceTokenLabel": "Token",
+  "deviceNeighborhoodsLabel": "Bairros",
+  "aboutSubtitle": "Centro de Operações Rio",
+  "developedByLabel": "Desenvolvido por",
+  "developedByValue": "Prefeitura do Rio",
+  "timeAgoNow": "agora mesmo",
+  "timeAgoMinutes": "há {minutes} min",
+  "@timeAgoMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "timeAgoHours": "há {hours}h",
+  "@timeAgoHours": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "timeAgoDate": "{date} {time}",
+  "@timeAgoDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  }
+  ,
+  "viewOnMap": "Ver no mapa",
+  "watch": "Assistir",
+  "retry": "Tentar novamente",
+  "back": "Voltar"
+  ,
+  "errorGenericTitle": "Ops! Algo deu errado"
+  ,
+  "neighborhoodsSavedSuccess": "Bairros salvos com sucesso!",
+  "neighborhoodsSavedError": "Erro ao salvar bairros",
+  "selectedCountLabel": "{count, plural, =1{# selecionado} other{# selecionados}}",
+  "@selectedCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "syncWithFavoritesTitle": "Sincronizar com favoritos",
+  "syncWithFavoritesSubtitle": "Atualiza automaticamente quando você adiciona locais favoritos",
+  "selectAll": "Selecionar todos",
+  "noNeighborhoodsFoundTitle": "Nenhum bairro encontrado",
+  "tryAnotherSearch": "Tente outra busca",
+  "saving": "Salvando..."
+}

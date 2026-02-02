@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../../core/models/incident_model.dart';
@@ -239,7 +240,7 @@ class IncidentBottomSheet extends StatelessWidget {
                     child: ElevatedButton.icon(
                       onPressed: onViewOnMap,
                       icon: const Icon(LucideIcons.mapPin),
-                      label: const Text('Ver no Mapa'),
+                      label: Text(AppLocalizations.of(context)!.viewOnMap),
                     ),
                   ),
 

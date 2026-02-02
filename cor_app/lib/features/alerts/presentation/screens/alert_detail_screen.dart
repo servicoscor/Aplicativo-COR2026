@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../../core/models/alert_model.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/severity_badge.dart';
@@ -365,7 +366,7 @@ class _AlertDetailScreenState extends ConsumerState<AlertDetailScreen> {
                         Navigator.of(context).pop();
                       },
                       icon: const Icon(LucideIcons.map),
-                      label: const Text('Ver no Mapa'),
+                      label: Text(AppLocalizations.of(context)!.viewOnMap),
                     ),
                   ),
 

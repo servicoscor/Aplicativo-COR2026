@@ -1,0 +1,160 @@
+{
+  "@@locale": "en",
+  "appTitle": "COR.AI",
+  "settingsTitle": "Settings",
+  "languageSectionTitle": "Language",
+  "languageLabel": "App language",
+  "languagePortuguese": "Portuguese (Brazil)",
+  "languageEnglish": "English",
+  "languageSpanish": "Spanish",
+  "languageChinese": "Chinese (Simplified)"
+  ,
+  "navMap": "Map",
+  "navCity": "City",
+  "navNetworks": "Networks",
+  "navFavorites": "Favorites",
+  "navConfig": "Settings",
+  "socialTitle": "COR Social Networks",
+  "socialXLabel": "X (Twitter)",
+  "socialInstagramLabel": "Instagram",
+  "socialFacebookLabel": "Facebook"
+  ,
+  "alertsTitle": "City",
+  "unreadCountLabel": "{count, plural, =1{# unread} other{# unread}}",
+  "@unreadCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "filterUnread": "Unread",
+  "filterEmergency": "Emergency",
+  "filterAlert": "Alert",
+  "filterInfo": "Info",
+  "clear": "Clear",
+  "emptyAlertsTitle": "No alerts",
+  "emptyAlertsSubtitle": "You have no alerts right now.\nWhen there is news, you will be notified.",
+  "refresh": "Refresh",
+  "noResultsTitle": "No results",
+  "noResultsSubtitle": "No alerts match the selected filters.",
+  "clearFilters": "Clear Filters"
+  ,
+  "favoritesTitle": "My Neighborhoods",
+  "favoritesInstruction": "Add your favorite neighborhoods to receive personalized alerts, even when location is not available.",
+  "favoritesSearchHint": "Search neighborhood...",
+  "favoritesEmptyTitle": "No favorite neighborhoods",
+  "favoritesEmptySubtitle": "Use the search above to add neighborhoods to your favorites list.",
+  "favoritesRemoveTitle": "Remove neighborhood?",
+  "favoritesRemoveBody": "Remove \"{name}\" from your favorite neighborhoods?",
+  "@favoritesRemoveBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "cancel": "Cancel",
+  "remove": "Remove"
+  ,
+  "appLinkError": "Unable to open the app link.",
+  "install": "Install"
+  ,
+  "sectionPermissions": "Permissions",
+  "permissionLocationTitle": "Location",
+  "permissionGranted": "Permission granted",
+  "permissionLocationNeeded": "Permission required for local alerts",
+  "permissionNotificationsTitle": "Notifications",
+  "permissionNotificationsNeeded": "Permission required to receive alerts",
+  "sectionAlerts": "Alerts",
+  "sectionServer": "Server",
+  "sectionSystemStatus": "System Status",
+  "sectionDiagnostics": "Connection Test",
+  "sectionAbout": "About",
+  "allow": "Allow",
+  "neighborhoodAlertsTitle": "Neighborhood alerts",
+  "neighborhoodAlertsSubtitle": "Choose the neighborhoods you want to receive alerts for",
+  "apiUrlLabel": "API URL",
+  "apiUrlHint": "http://10.0.2.2:8000",
+  "invalidUrl": "Invalid URL. Use http:// or https://",
+  "save": "Save",
+  "systemFirebase": "Firebase",
+  "statusOk": "OK",
+  "statusNotConfigured": "NOT CONFIGURED",
+  "systemFcmToken": "FCM Token",
+  "statusPresent": "Present",
+  "statusAbsent": "Absent",
+  "systemLastRegister": "Last Register",
+  "statusSuccess": "Success",
+  "statusFailure": "Failure",
+  "statusNever": "Never",
+  "testConnectionTitle": "Test Connection",
+  "testConnectionSubtitle": "Checks API status /v1/health",
+  "test": "Test",
+  "connectionOk": "Connection OK",
+  "connectionFailed": "Connection failed",
+  "statusLabel": "Status",
+  "versionLabel": "Version",
+  "databaseLabel": "Database",
+  "cacheLabel": "Cache",
+  "registeredDeviceTitle": "Registered Device",
+  "deviceIdLabel": "ID",
+  "devicePlatformLabel": "Platform",
+  "deviceTokenLabel": "Token",
+  "deviceNeighborhoodsLabel": "Neighborhoods",
+  "aboutSubtitle": "Rio Operations Center",
+  "developedByLabel": "Developed by",
+  "developedByValue": "City of Rio",
+  "timeAgoNow": "just now",
+  "timeAgoMinutes": "{minutes} min ago",
+  "@timeAgoMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "timeAgoHours": "{hours}h ago",
+  "@timeAgoHours": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "timeAgoDate": "{date} {time}",
+  "@timeAgoDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  }
+  ,
+  "viewOnMap": "View on map",
+  "watch": "Watch",
+  "retry": "Try again",
+  "back": "Back"
+  ,
+  "errorGenericTitle": "Oops! Something went wrong"
+  ,
+  "neighborhoodsSavedSuccess": "Neighborhoods saved successfully!",
+  "neighborhoodsSavedError": "Error saving neighborhoods",
+  "selectedCountLabel": "{count, plural, =1{# selected} other{# selected}}",
+  "@selectedCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "syncWithFavoritesTitle": "Sync with favorites",
+  "syncWithFavoritesSubtitle": "Automatically updates when you add favorite places",
+  "selectAll": "Select all",
+  "noNeighborhoodsFoundTitle": "No neighborhoods found",
+  "tryAnotherSearch": "Try another search",
+  "saving": "Saving..."
+}

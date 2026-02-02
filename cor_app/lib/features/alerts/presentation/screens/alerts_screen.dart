@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/widgets.dart';
 import '../../../../core/models/alert_model.dart';
@@ -42,10 +43,11 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(alertsControllerProvider);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Cidade'),
+        title: Text(l10n.alertsTitle),
         actions: [
           // Contador de não lidos
           if (state.unreadCount > 0)
@@ -63,7 +65,7 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
                     const Icon(LucideIcons.mailOpen, size: 14, color: AppColors.emergency),
                     const SizedBox(width: 4),
                     Text(
-                      '${state.unreadCount} não lido${state.unreadCount > 1 ? 's' : ''}',
+                      l10n.unreadCountLabel(state.unreadCount),
                       style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
@@ -79,15 +81,15 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
       body: Column(
         children: [
           // Filtros
-          _buildFilters(state),
+          _buildFilters(state, l10n),
           // Lista
-          Expanded(child: _buildBody(state)),
+          Expanded(child: _buildBody(state, l10n)),
         ],
       ),
     );
   }
 
-  Widget _buildFilters(AlertsState state) {
+  Widget _buildFilters(AlertsState state, AppLocalizations l10n) {
     final controller = ref.read(alertsControllerProvider.notifier);
 
     return Container(
@@ -107,7 +109,7 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
           children: [
             // Filtro: Não lidos
             FilterChip(
-              label: const Text('Não lidos'),
+              label: Text(l10n.filterUnread),
               selected: state.showUnreadOnly,
               onSelected: (selected) => controller.setShowUnreadOnly(selected),
               avatar: state.showUnreadOnly
@@ -120,7 +122,7 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
 
             // Filtro: Emergência
             FilterChip(
-              label: const Text('Emergência'),
+              label: Text(l10n.filterEmergency),
               selected: state.selectedSeverity == 'emergency',
               onSelected: (_) => controller.setSeverityFilter('emergency'),
               avatar: const Icon(LucideIcons.alertTriangle, size: 16, color: AppColors.emergency),
@@ -131,7 +133,7 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
 
             // Filtro: Alerta
             FilterChip(
-              label: const Text('Alerta'),
+              label: Text(l10n.filterAlert),
               selected: state.selectedSeverity == 'alert',
               onSelected: (_) => controller.setSeverityFilter('alert'),
               avatar: const Icon(LucideIcons.alertCircle, size: 16, color: AppColors.alert),
@@ -142,7 +144,7 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
 
             // Filtro: Info
             FilterChip(
-              label: const Text('Info'),
+              label: Text(l10n.filterInfo),
               selected: state.selectedSeverity == 'info',
               onSelected: (_) => controller.setSeverityFilter('info'),
               avatar: const Icon(LucideIcons.info, size: 16, color: AppColors.info),
@@ -156,7 +158,7 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
                 state.showUnreadOnly) ...[
               const SizedBox(width: AppSpacing.md),
               ActionChip(
-                label: const Text('Limpar'),
+                label: Text(l10n.clear),
                 avatar: const Icon(LucideIcons.x, size: 16),
                 onPressed: controller.clearFilters,
               ),
@@ -167,7 +169,7 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
     );
   }
 
-  Widget _buildBody(AlertsState state) {
+  Widget _buildBody(AlertsState state, AppLocalizations l10n) {
     // Loading inicial
     if (state.isLoading && state.alerts.isEmpty) {
       return const ShimmerList(
@@ -188,12 +190,12 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
     if (state.alerts.isEmpty) {
       return EmptyState(
         icon: LucideIcons.bellOff,
-        title: 'Nenhum alerta',
-        subtitle: 'Você não possui alertas no momento.\nQuando houver novidades, você será notificado.',
+        title: l10n.emptyAlertsTitle,
+        subtitle: l10n.emptyAlertsSubtitle,
         action: ElevatedButton.icon(
           onPressed: _onRefresh,
           icon: const Icon(LucideIcons.refreshCw),
-          label: const Text('Atualizar'),
+          label: Text(l10n.refresh),
         ),
       );
     }
@@ -204,12 +206,12 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
     if (filteredAlerts.isEmpty) {
       return EmptyState(
         icon: LucideIcons.filter,
-        title: 'Nenhum resultado',
-        subtitle: 'Nenhum alerta corresponde aos filtros selecionados.',
+        title: l10n.noResultsTitle,
+        subtitle: l10n.noResultsSubtitle,
         action: ElevatedButton.icon(
           onPressed: () => ref.read(alertsControllerProvider.notifier).clearFilters(),
           icon: const Icon(LucideIcons.x),
-          label: const Text('Limpar Filtros'),
+          label: Text(l10n.clearFilters),
         ),
       );
     }

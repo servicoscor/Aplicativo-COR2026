@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/widgets.dart';
 import '../controllers/subscriptions_controller.dart';
@@ -38,16 +39,16 @@ class _NeighborhoodSubscriptionsScreenState
     if (mounted) {
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Bairros salvos com sucesso!'),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.neighborhoodsSavedSuccess),
             backgroundColor: AppColors.success,
           ),
         );
         Navigator.of(context).pop();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Erro ao salvar bairros'),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.neighborhoodsSavedError),
             backgroundColor: AppColors.error,
           ),
         );
@@ -59,10 +60,11 @@ class _NeighborhoodSubscriptionsScreenState
   Widget build(BuildContext context) {
     final state = ref.watch(subscriptionsControllerProvider);
     final controller = ref.read(subscriptionsControllerProvider.notifier);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Alertas por Bairro'),
+        title: Text(l10n.neighborhoodAlertsTitle),
         actions: [
           // Contador de selecionados
           if (state.selectedCount > 0)
@@ -75,7 +77,7 @@ class _NeighborhoodSubscriptionsScreenState
                   borderRadius: BorderRadius.circular(AppRadius.md),
                 ),
                 child: Text(
-                  '${state.selectedCount} selecionado${state.selectedCount > 1 ? 's' : ''}',
+                  l10n.selectedCountLabel(state.selectedCount),
                   style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
@@ -114,6 +116,7 @@ class _NeighborhoodSubscriptionsScreenState
   }
 
   Widget _buildSyncToggle(SubscriptionsState state, SubscriptionsController controller) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       margin: const EdgeInsets.all(AppSpacing.md),
       padding: const EdgeInsets.all(AppSpacing.md),
@@ -143,12 +146,12 @@ class _NeighborhoodSubscriptionsScreenState
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Sincronizar com favoritos',
+                  l10n.syncWithFavoritesTitle,
                   style: Theme.of(context).textTheme.titleSmall,
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  'Atualiza automaticamente quando você adiciona locais favoritos',
+                  l10n.syncWithFavoritesSubtitle,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ],
@@ -165,6 +168,7 @@ class _NeighborhoodSubscriptionsScreenState
 
   Widget _buildSearchAndActions(
       SubscriptionsState state, SubscriptionsController controller) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
       child: Column(
@@ -174,7 +178,7 @@ class _NeighborhoodSubscriptionsScreenState
             controller: _searchController,
             onChanged: controller.setSearchQuery,
             decoration: InputDecoration(
-              hintText: 'Buscar bairro...',
+              hintText: l10n.favoritesSearchHint,
               prefixIcon: const Icon(LucideIcons.search, size: 20),
               suffixIcon: state.searchQuery.isNotEmpty
                   ? IconButton(
@@ -210,7 +214,7 @@ class _NeighborhoodSubscriptionsScreenState
                 child: OutlinedButton.icon(
                   onPressed: controller.selectAll,
                   icon: const Icon(LucideIcons.checkCheck, size: 16),
-                  label: const Text('Selecionar todos'),
+                  label: Text(l10n.selectAll),
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
                   ),
@@ -221,7 +225,7 @@ class _NeighborhoodSubscriptionsScreenState
                 child: OutlinedButton.icon(
                   onPressed: controller.clearAll,
                   icon: const Icon(LucideIcons.x, size: 16),
-                  label: const Text('Limpar'),
+                  label: Text(l10n.clear),
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
                   ),
@@ -237,6 +241,7 @@ class _NeighborhoodSubscriptionsScreenState
 
   Widget _buildNeighborhoodList(
       SubscriptionsState state, SubscriptionsController controller) {
+    final l10n = AppLocalizations.of(context)!;
     final neighborhoods = state.filteredNeighborhoods;
 
     if (neighborhoods.isEmpty) {
@@ -251,14 +256,14 @@ class _NeighborhoodSubscriptionsScreenState
             ),
             const SizedBox(height: AppSpacing.md),
             Text(
-              'Nenhum bairro encontrado',
+              l10n.noNeighborhoodsFoundTitle,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     color: AppColors.textMuted,
                   ),
             ),
             const SizedBox(height: AppSpacing.xs),
             Text(
-              'Tente outra busca',
+              l10n.tryAnotherSearch,
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ],
@@ -307,6 +312,7 @@ class _NeighborhoodSubscriptionsScreenState
   }
 
   Widget _buildSaveButton(SubscriptionsState state) {
+    final l10n = AppLocalizations.of(context)!;
     return SafeArea(
       child: Container(
         padding: const EdgeInsets.all(AppSpacing.md),
@@ -330,7 +336,7 @@ class _NeighborhoodSubscriptionsScreenState
                     ),
                   )
                 : const Icon(LucideIcons.save),
-            label: Text(state.isSaving ? 'Salvando...' : 'Salvar'),
+            label: Text(state.isSaving ? l10n.saving : l10n.save),
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
             ),

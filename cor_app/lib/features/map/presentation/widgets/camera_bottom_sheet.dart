@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../../core/models/camera_model.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../screens/camera_player_screen.dart';
@@ -170,7 +171,7 @@ class CameraBottomSheet extends StatelessWidget {
                       child: OutlinedButton.icon(
                         onPressed: onViewOnMap,
                         icon: const Icon(LucideIcons.mapPin, size: 18),
-                        label: const Text('Ver no mapa'),
+                        label: Text(AppLocalizations.of(context)!.viewOnMap),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: AppColors.textPrimary,
                           side: const BorderSide(color: AppColors.divider),
@@ -183,7 +184,7 @@ class CameraBottomSheet extends StatelessWidget {
                       child: ElevatedButton.icon(
                         onPressed: camera.isOnline ? () => _openPlayer(context) : null,
                         icon: const Icon(LucideIcons.play, size: 18),
-                        label: const Text('Assistir'),
+                        label: Text(AppLocalizations.of(context)!.watch),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: color,
                           foregroundColor: Colors.white,
