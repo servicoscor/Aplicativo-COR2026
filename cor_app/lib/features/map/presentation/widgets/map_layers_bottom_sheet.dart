@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../../core/theme/app_theme.dart';
@@ -55,7 +56,7 @@ class MapLayersBottomSheet extends ConsumerWidget {
                 if (state.incidentFilters.hasActiveFilters)
                   TextButton(
                     onPressed: controller.clearIncidentFilters,
-                    child: const Text('Limpar filtros'),
+                    child: Text(AppLocalizations.of(context)!.clearFilters),
                   ),
               ],
             ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/widgets.dart';
 import '../controllers/favorites_controller.dart';
@@ -28,10 +29,11 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
   Widget build(BuildContext context) {
     final state = ref.watch(favoritesControllerProvider);
     final controller = ref.read(favoritesControllerProvider.notifier);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Meus Bairros'),
+        title: Text(l10n.favoritesTitle),
       ),
       body: Column(
         children: [
@@ -43,7 +45,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
               children: [
                 // Instrução
                 Text(
-                  'Adicione seus bairros favoritos para receber alertas personalizados, mesmo quando a localização não estiver disponível.',
+                  l10n.favoritesInstruction,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: AppColors.textSecondary,
                       ),
@@ -56,7 +58,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
                   focusNode: _focusNode,
                   onChanged: controller.updateSearchQuery,
                   decoration: InputDecoration(
-                    hintText: 'Buscar bairro...',
+                    hintText: l10n.favoritesSearchHint,
                     prefixIcon: const Icon(LucideIcons.search, size: 20),
                     suffixIcon: state.searchQuery.isNotEmpty
                         ? IconButton(
@@ -102,7 +104,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
           // Lista de favoritos
           Expanded(
             child: state.favorites.isEmpty
-                ? _buildEmptyState()
+                ? _buildEmptyState(l10n)
                 : _buildFavoritesList(state.favorites, controller),
           ),
         ],
@@ -110,11 +112,11 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
     );
   }
 
-  Widget _buildEmptyState() {
-    return const EmptyState(
+  Widget _buildEmptyState(AppLocalizations l10n) {
+    return EmptyState(
       icon: LucideIcons.mapPin,
-      title: 'Nenhum bairro favorito',
-      subtitle: 'Use a busca acima para adicionar bairros à sua lista de favoritos.',
+      title: l10n.favoritesEmptyTitle,
+      subtitle: l10n.favoritesEmptySubtitle,
     );
   }
 
@@ -137,14 +139,14 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Remover bairro?'),
+        title: Text(AppLocalizations.of(context)!.favoritesRemoveTitle),
         content: Text(
-          'Deseja remover "$neighborhood" dos seus bairros favoritos?',
+          AppLocalizations.of(context)!.favoritesRemoveBody(neighborhood),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancelar'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           ElevatedButton(
             onPressed: () {
@@ -154,7 +156,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.error,
             ),
-            child: const Text('Remover'),
+            child: Text(AppLocalizations.of(context)!.remove),
           ),
         ],
       ),

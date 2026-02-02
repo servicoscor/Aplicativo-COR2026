@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'l10n/app_localizations.dart';
 
 import 'core/theme/app_theme.dart';
 import 'core/services/fcm_service.dart';
@@ -98,6 +99,8 @@ class _AppShellState extends ConsumerState<AppShell> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     // Escuta contagem de alertas não lidos
     final unreadCount = ref.watch(unreadAlertsCountProvider);
 
@@ -127,7 +130,7 @@ class _AppShellState extends ConsumerState<AppShell> {
           ),
         ],
       ),
-      bottomNavigationBar: _buildBottomNav(unreadCount),
+      bottomNavigationBar: _buildBottomNav(unreadCount, l10n),
     );
   }
 
@@ -163,7 +166,7 @@ class _AppShellState extends ConsumerState<AppShell> {
     }
   }
 
-  Widget _buildBottomNav(int unreadCount) {
+  Widget _buildBottomNav(int unreadCount, AppLocalizations l10n) {
     return Container(
       decoration: const BoxDecoration(
         color: AppColors.surface,
@@ -183,24 +186,24 @@ class _AppShellState extends ConsumerState<AppShell> {
               _buildNavItem(
                 index: 0,
                 icon: LucideIcons.map,
-                label: 'Mapa',
+                label: l10n.navMap,
               ),
               _buildNavItem(
                 index: 1,
                 icon: LucideIcons.bell,
-                label: 'Cidade',
+                label: l10n.navCity,
                 badge: unreadCount > 0 ? unreadCount : null,
               ),
-              _buildSocialButton(),
+              _buildSocialButton(l10n),
               _buildNavItem(
                 index: 2,
                 icon: LucideIcons.heart,
-                label: 'Favoritos',
+                label: l10n.navFavorites,
               ),
               _buildNavItem(
                 index: 3,
                 icon: LucideIcons.settings,
-                label: 'Config',
+                label: l10n.navConfig,
               ),
             ],
           ),
@@ -281,7 +284,7 @@ class _AppShellState extends ConsumerState<AppShell> {
     );
   }
 
-  Widget _buildSocialButton() {
+  Widget _buildSocialButton(AppLocalizations l10n) {
     return GestureDetector(
       onTap: _showSocialDropup,
       behavior: HitTestBehavior.opaque,
@@ -299,9 +302,9 @@ class _AppShellState extends ConsumerState<AppShell> {
               color: AppColors.textMuted,
             ),
             const SizedBox(height: 4),
-            const Text(
-              'Redes',
-              style: TextStyle(
+            Text(
+              l10n.navNetworks,
+              style: const TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w500,
                 color: AppColors.textMuted,
@@ -344,9 +347,9 @@ class _AppShellState extends ConsumerState<AppShell> {
                     ),
                   ),
                   const SizedBox(width: AppSpacing.sm),
-                  const Text(
-                    'Redes Sociais do COR',
-                    style: TextStyle(
+                  Text(
+                    AppLocalizations.of(context)!.socialTitle,
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: AppColors.textPrimary,
@@ -360,23 +363,23 @@ class _AppShellState extends ConsumerState<AppShell> {
             _buildSocialItem(
               icon: LucideIcons.twitter,
               label: 'X (Twitter)',
-              subtitle: '@operacoesrio',
+              subtitle: '@aboraboriooficial',
               color: const Color(0xFF1DA1F2),
-              url: 'https://x.com/operacoesrio',
+              url: 'https://twitter.com/aboraboriooficial',
             ),
             _buildSocialItem(
               icon: LucideIcons.instagram,
               label: 'Instagram',
-              subtitle: '@operacoesrio',
+              subtitle: '@operaboracoesrio',
               color: const Color(0xFFE4405F),
-              url: 'https://instagram.com/operacoesrio',
+              url: 'https://instagram.com/operaboracoesrio',
             ),
             _buildSocialItem(
               icon: LucideIcons.facebook,
-              label: 'Facebook',
-              subtitle: 'Centro de Operações Rio',
+              label: AppLocalizations.of(context)!.socialFacebookLabel,
+              subtitle: 'operacoesrio',
               color: const Color(0xFF1877F2),
-              url: 'https://facebook.com/operacoesrio',
+              url: 'https://facebook.com/operaboracoesrio',
             ),
             const SizedBox(height: AppSpacing.md),
           ],

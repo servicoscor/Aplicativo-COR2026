@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../../core/models/rain_gauge_model.dart';
@@ -243,7 +244,7 @@ class RainGaugeBottomSheet extends StatelessWidget {
                   child: ElevatedButton.icon(
                     onPressed: onViewOnMap,
                     icon: const Icon(LucideIcons.mapPin),
-                    label: const Text('Ver no Mapa'),
+                    label: Text(AppLocalizations.of(context)!.viewOnMap),
                   ),
                 ),
 

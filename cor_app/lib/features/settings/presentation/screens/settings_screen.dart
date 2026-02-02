@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import '../../../../l10n/app_localizations.dart';
+import '../../../../core/config/locale_config.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/models/models.dart';
 import '../controllers/settings_controller.dart';
@@ -42,22 +44,25 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   Widget build(BuildContext context) {
     final state = ref.watch(settingsControllerProvider);
     final controller = ref.read(settingsControllerProvider.notifier);
+    final l10n = AppLocalizations.of(context)!;
+    final locale = ref.watch(localeProvider);
+    final localeController = ref.read(localeProvider.notifier);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Configurações'),
+        title: Text(l10n.settingsTitle),
       ),
       body: ListView(
         padding: const EdgeInsets.all(AppSpacing.md),
         children: [
           // Seção: Permissões
-          _buildSectionTitle('Permissões'),
+          _buildSectionTitle(l10n.sectionPermissions),
           _buildPermissionTile(
             icon: LucideIcons.mapPin,
-            title: 'Localização',
+            title: l10n.permissionLocationTitle,
             subtitle: state.locationPermissionGranted
-                ? 'Permissão concedida'
-                : 'Permissão necessária para alertas locais',
+                ? l10n.permissionGranted
+                : l10n.permissionLocationNeeded,
             isGranted: state.locationPermissionGranted,
             isEnabled: state.locationEnabled,
             onToggle: (enabled) => controller.toggleLocationEnabled(enabled),
@@ -66,10 +71,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           const SizedBox(height: AppSpacing.sm),
           _buildPermissionTile(
             icon: LucideIcons.bell,
-            title: 'Notificações',
+            title: l10n.permissionNotificationsTitle,
             subtitle: state.notificationPermissionGranted
-                ? 'Permissão concedida'
-                : 'Permissão necessária para receber alertas',
+                ? l10n.permissionGranted
+                : l10n.permissionNotificationsNeeded,
             isGranted: state.notificationPermissionGranted,
             isEnabled: state.notificationsEnabled,
             onToggle: (enabled) => controller.toggleNotificationsEnabled(enabled),
@@ -79,25 +84,31 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           const SizedBox(height: AppSpacing.xl),
 
           // Seção: Alertas
-          _buildSectionTitle('Alertas'),
+          _buildSectionTitle(l10n.sectionAlerts),
           _buildNeighborhoodsTile(),
 
           const SizedBox(height: AppSpacing.xl),
 
+          // Seção: Idioma
+          _buildSectionTitle(l10n.languageSectionTitle),
+          _buildLanguageTile(locale, localeController, l10n),
+
+          const SizedBox(height: AppSpacing.xl),
+
           // Seção: Servidor
-          _buildSectionTitle('Servidor'),
+          _buildSectionTitle(l10n.sectionServer),
           _buildUrlTile(state, controller),
 
           const SizedBox(height: AppSpacing.xl),
 
           // Seção: Status do Sistema
-          _buildSectionTitle('Status do Sistema'),
+          _buildSectionTitle(l10n.sectionSystemStatus),
           _buildSystemStatusTile(state),
 
           const SizedBox(height: AppSpacing.xl),
 
           // Seção: Diagnóstico (Teste de Conexão)
-          _buildSectionTitle('Teste de Conexão'),
+          _buildSectionTitle(l10n.sectionDiagnostics),
           _buildDiagnosticTile(state, controller),
 
           // Resultado do teste
@@ -115,7 +126,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           const SizedBox(height: AppSpacing.xl),
 
           // Seção: Sobre
-          _buildSectionTitle('Sobre'),
+          _buildSectionTitle(l10n.sectionAbout),
           _buildAboutTile(),
 
           const SizedBox(height: AppSpacing.xl),
@@ -193,7 +204,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           if (!isGranted)
             TextButton(
               onPressed: onRequest,
-              child: const Text('Permitir'),
+              child: Text(AppLocalizations.of(context)!.allow),
             )
           else
             Switch(
@@ -203,6 +214,140 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         ],
       ),
     );
+  }
+
+  Widget _buildLanguageTile(
+    Locale locale,
+    LocaleController controller,
+    AppLocalizations l10n,
+  ) {
+    return GestureDetector(
+      onTap: () => _showLanguagePicker(locale, controller, l10n),
+      child: Container(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(AppRadius.md),
+          border: Border.all(color: AppColors.divider),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: AppColors.primary.withOpacity(0.15),
+                borderRadius: BorderRadius.circular(AppRadius.sm),
+              ),
+              child: const Icon(
+                LucideIcons.languages,
+                color: AppColors.primary,
+                size: 20,
+              ),
+            ),
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.languageLabel,
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    _languageLabel(locale, l10n),
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ],
+              ),
+            ),
+            const Icon(
+              LucideIcons.chevronRight,
+              color: AppColors.textMuted,
+              size: 18,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showLanguagePicker(
+    Locale locale,
+    LocaleController controller,
+    AppLocalizations l10n,
+  ) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return Container(
+          margin: const EdgeInsets.all(AppSpacing.md),
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(AppRadius.lg),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(AppSpacing.md),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withOpacity(0.15),
+                        borderRadius: BorderRadius.circular(AppRadius.sm),
+                      ),
+                      child: const Icon(
+                        LucideIcons.languages,
+                        size: 20,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    Text(
+                      l10n.languageSectionTitle,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Divider(height: 1, color: AppColors.divider),
+              ...supportedAppLocales.map((supportedLocale) {
+                final isSelected = supportedLocale.languageCode == locale.languageCode &&
+                    supportedLocale.countryCode == locale.countryCode;
+                return ListTile(
+                  title: Text(_languageLabel(supportedLocale, l10n)),
+                  trailing: isSelected
+                      ? const Icon(LucideIcons.check, color: AppColors.primary)
+                      : null,
+                  onTap: () async {
+                    Navigator.pop(context);
+                    await controller.setLocale(supportedLocale);
+                  },
+                );
+              }),
+              const SizedBox(height: AppSpacing.md),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  String _languageLabel(Locale locale, AppLocalizations l10n) {
+    if (locale.languageCode == 'pt') return l10n.languagePortuguese;
+    if (locale.languageCode == 'en') return l10n.languageEnglish;
+    if (locale.languageCode == 'es') return l10n.languageSpanish;
+    if (locale.languageCode == 'zh') return l10n.languageChinese;
+    return l10n.languagePortuguese;
   }
 
   Widget _buildNeighborhoodsTile() {
@@ -242,12 +387,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Alertas por bairro',
+                    AppLocalizations.of(context)!.neighborhoodAlertsTitle,
                     style: Theme.of(context).textTheme.titleSmall,
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    'Escolha os bairros que deseja receber alertas',
+                    AppLocalizations.of(context)!.neighborhoodAlertsSubtitle,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ],
@@ -279,9 +424,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             TextField(
               controller: _urlController..text = state.editingUrl,
               onChanged: controller.updateEditingUrl,
-              decoration: const InputDecoration(
-                labelText: 'URL da API',
-                hintText: 'http://10.0.2.2:8000',
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.apiUrlLabel,
+                hintText: AppLocalizations.of(context)!.apiUrlHint,
               ),
               keyboardType: TextInputType.url,
               autocorrect: false,
@@ -292,7 +437,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               children: [
                 TextButton(
                   onPressed: controller.cancelEditingUrl,
-                  child: const Text('Cancelar'),
+                  child: Text(AppLocalizations.of(context)!.cancel),
                 ),
                 const SizedBox(width: AppSpacing.sm),
                 ElevatedButton(
@@ -300,14 +445,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     final success = await controller.saveUrl();
                     if (!success && mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('URL inválida. Use http:// ou https://'),
+                        SnackBar(
+                          content: Text(AppLocalizations.of(context)!.invalidUrl),
                           backgroundColor: AppColors.error,
                         ),
                       );
                     }
                   },
-                  child: const Text('Salvar'),
+                  child: Text(AppLocalizations.of(context)!.save),
                 ),
               ],
             ),
@@ -344,7 +489,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'URL da API',
+                  AppLocalizations.of(context)!.apiUrlLabel,
                   style: Theme.of(context).textTheme.titleSmall,
                 ),
                 const SizedBox(height: 2),
@@ -384,8 +529,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           // Firebase Status
           _buildStatusRow(
             icon: LucideIcons.flame,
-            label: 'Firebase',
-            status: diagnostic.firebaseOk ? 'OK' : 'NÃO CONFIGURADO',
+            label: AppLocalizations.of(context)!.systemFirebase,
+            status: diagnostic.firebaseOk
+                ? AppLocalizations.of(context)!.statusOk
+                : AppLocalizations.of(context)!.statusNotConfigured,
             isOk: diagnostic.firebaseOk,
           ),
           const SizedBox(height: AppSpacing.md),
@@ -393,8 +540,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           // FCM Token Status
           _buildStatusRow(
             icon: LucideIcons.key,
-            label: 'FCM Token',
-            status: diagnostic.hasFcmToken ? 'Presente' : 'Ausente',
+            label: AppLocalizations.of(context)!.systemFcmToken,
+            status: diagnostic.hasFcmToken
+                ? AppLocalizations.of(context)!.statusPresent
+                : AppLocalizations.of(context)!.statusAbsent,
             isOk: diagnostic.hasFcmToken,
             subtitle: diagnostic.fcmTokenPreview,
           ),
@@ -403,13 +552,18 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           // Último Register
           _buildStatusRow(
             icon: LucideIcons.cloud,
-            label: 'Último Register',
+            label: AppLocalizations.of(context)!.systemLastRegister,
             status: diagnostic.lastRegisterTimestamp != null
-                ? (diagnostic.lastRegisterSuccess ? 'Sucesso' : 'Falha')
-                : 'Nunca',
+                ? (diagnostic.lastRegisterSuccess
+                    ? AppLocalizations.of(context)!.statusSuccess
+                    : AppLocalizations.of(context)!.statusFailure)
+                : AppLocalizations.of(context)!.statusNever,
             isOk: diagnostic.lastRegisterSuccess,
             subtitle: diagnostic.lastRegisterTimestamp != null
-                ? _formatTimestamp(diagnostic.lastRegisterTimestamp!)
+                ? _formatTimestamp(
+                    diagnostic.lastRegisterTimestamp!,
+                    AppLocalizations.of(context)!,
+                  )
                 : null,
           ),
         ],
@@ -487,18 +641,22 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     );
   }
 
-  String _formatTimestamp(DateTime timestamp) {
+  String _formatTimestamp(DateTime timestamp, AppLocalizations l10n) {
     final now = DateTime.now();
     final diff = now.difference(timestamp);
 
     if (diff.inMinutes < 1) {
-      return 'agora mesmo';
+      return l10n.timeAgoNow;
     } else if (diff.inMinutes < 60) {
-      return 'há ${diff.inMinutes} min';
+      return l10n.timeAgoMinutes(diff.inMinutes);
     } else if (diff.inHours < 24) {
-      return 'há ${diff.inHours}h';
+      return l10n.timeAgoHours(diff.inHours);
     } else {
-      return '${timestamp.day.toString().padLeft(2, '0')}/${timestamp.month.toString().padLeft(2, '0')} ${timestamp.hour.toString().padLeft(2, '0')}:${timestamp.minute.toString().padLeft(2, '0')}';
+      final date =
+          '${timestamp.day.toString().padLeft(2, '0')}/${timestamp.month.toString().padLeft(2, '0')}';
+      final time =
+          '${timestamp.hour.toString().padLeft(2, '0')}:${timestamp.minute.toString().padLeft(2, '0')}';
+      return l10n.timeAgoDate(date, time);
     }
   }
 
@@ -533,12 +691,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Testar Conexão',
+                      AppLocalizations.of(context)!.testConnectionTitle,
                       style: Theme.of(context).textTheme.titleSmall,
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      'Verifica status da API /v1/health',
+                      AppLocalizations.of(context)!.testConnectionSubtitle,
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ],
@@ -555,7 +713,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           color: Colors.white,
                         ),
                       )
-                    : const Text('Testar'),
+                    : Text(AppLocalizations.of(context)!.test),
               ),
             ],
           ),
@@ -588,7 +746,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ),
               const SizedBox(width: AppSpacing.sm),
               Text(
-                isSuccess ? 'Conexão OK' : 'Falha na conexão',
+                isSuccess
+                    ? AppLocalizations.of(context)!.connectionOk
+                    : AppLocalizations.of(context)!.connectionFailed,
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
                   color: isSuccess ? AppColors.success : AppColors.error,
@@ -604,13 +764,25 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ),
           if (isSuccess && result.response != null) ...[
             const SizedBox(height: AppSpacing.md),
-            _buildInfoRow('Status', result.response!.status),
+            _buildInfoRow(
+              AppLocalizations.of(context)!.statusLabel,
+              result.response!.status,
+            ),
             if (result.response!.version != null)
-              _buildInfoRow('Versão', result.response!.version!),
+              _buildInfoRow(
+                AppLocalizations.of(context)!.versionLabel,
+                result.response!.version!,
+              ),
             if (result.response!.database != null)
-              _buildInfoRow('Database', result.response!.database!.status),
+              _buildInfoRow(
+                AppLocalizations.of(context)!.databaseLabel,
+                result.response!.database!.status,
+              ),
             if (result.response!.cache != null)
-              _buildInfoRow('Cache', result.response!.cache!.status),
+              _buildInfoRow(
+                AppLocalizations.of(context)!.cacheLabel,
+                result.response!.cache!.status,
+              ),
           ],
           if (!isSuccess && result.error != null) ...[
             const SizedBox(height: AppSpacing.sm),
@@ -657,16 +829,22 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Dispositivo Registrado',
+            AppLocalizations.of(context)!.registeredDeviceTitle,
             style: Theme.of(context).textTheme.titleSmall,
           ),
           const SizedBox(height: AppSpacing.sm),
-          _buildInfoRow('ID', device.id),
-          _buildInfoRow('Plataforma', device.platform.toUpperCase()),
+          _buildInfoRow(AppLocalizations.of(context)!.deviceIdLabel, device.id),
+          _buildInfoRow(
+            AppLocalizations.of(context)!.devicePlatformLabel,
+            device.platform.toUpperCase(),
+          ),
           if (device.maskedToken != null)
-            _buildInfoRow('Token', device.maskedToken!),
+            _buildInfoRow(AppLocalizations.of(context)!.deviceTokenLabel, device.maskedToken!),
           if (device.neighborhoods != null && device.neighborhoods!.isNotEmpty)
-            _buildInfoRow('Bairros', device.neighborhoods!.join(', ')),
+            _buildInfoRow(
+              AppLocalizations.of(context)!.deviceNeighborhoodsLabel,
+              device.neighborhoods!.join(', '),
+            ),
         ],
       ),
     );
@@ -707,7 +885,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                     Text(
-                      'Centro de Operações Rio',
+                      AppLocalizations.of(context)!.aboutSubtitle,
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ],
@@ -718,8 +896,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           const SizedBox(height: AppSpacing.md),
           const Divider(),
           const SizedBox(height: AppSpacing.sm),
-          _buildInfoRow('Versão', _appVersion.isNotEmpty ? _appVersion : '1.0.0'),
-          _buildInfoRow('Desenvolvido por', 'Prefeitura do Rio'),
+          _buildInfoRow(
+            AppLocalizations.of(context)!.versionLabel,
+            _appVersion.isNotEmpty ? _appVersion : '1.0.0',
+          ),
+          _buildInfoRow(
+            AppLocalizations.of(context)!.developedByLabel,
+            AppLocalizations.of(context)!.developedByValue,
+          ),
         ],
       ),
     );

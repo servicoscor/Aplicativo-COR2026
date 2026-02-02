@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:webview_flutter_android/webview_flutter_android.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../../core/models/camera_model.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../widgets/camera_marker.dart';
@@ -25,6 +27,8 @@ class _CameraPlayerScreenState extends State<CameraPlayerScreen> {
   bool _hasError = false;
   String? _errorMessage;
   bool _showInfo = true;
+  static const double _cameraCssScale = 0.08;
+  static const double _viewScale = 0.97;
 
   @override
   void initState() {
@@ -48,9 +52,6 @@ class _CameraPlayerScreenState extends State<CameraPlayerScreen> {
   void _restoreOrientation() {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.landscapeRight,
     ]);
     SystemChrome.setEnabledSystemUIMode(
       SystemUiMode.edgeToEdge,
@@ -90,82 +91,44 @@ class _CameraPlayerScreenState extends State<CameraPlayerScreen> {
         ),
       )
       ..loadRequest(Uri.parse(widget.camera.streamUrl));
+
+    final platformController = _controller.platform;
+    if (platformController is AndroidWebViewController) {
+      platformController.setMediaPlaybackRequiresUserGesture(false);
+      platformController.enableZoom(false);
+      platformController.setTextZoom(100);
+      platformController.setUseWideViewPort(true);
+    }
   }
 
   void _injectFullscreenStyles() {
+    final scale = _cameraCssScale.toStringAsFixed(2);
     _controller.runJavaScript('''
       (function() {
-        var style = document.createElement('style');
-        style.innerHTML = `
-          html, body {
-            margin: 0 !important;
-            padding: 0 !important;
-            width: 100% !important;
-            height: 100% !important;
-            overflow: hidden !important;
-            background: black !important;
-          }
-          video, iframe, img, canvas {
-            position: fixed !important;
-            top: 50% !important;
-            left: 50% !important;
-            transform-origin: center center !important;
-            border: none !important;
-            background: black !important;
-          }
-        `;
-        document.head.appendChild(style);
+        document.body.style.margin = '0';
+        document.body.style.padding = '0';
+        document.body.style.overflow = 'hidden';
+        document.body.style.backgroundColor = 'black';
 
-        var viewport = document.querySelector('meta[name="viewport"]');
-        if (!viewport) {
-          viewport = document.createElement('meta');
-          viewport.name = 'viewport';
-          document.head.appendChild(viewport);
-        }
-        viewport.content = 'width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
-
-        function pickMedia() {
-          return document.querySelector('video') ||
-                 document.querySelector('img') ||
-                 document.querySelector('canvas') ||
-                 document.querySelector('iframe');
+        var video = document.querySelector('video');
+        if (video) {
+          video.style.width = '100vw';
+          video.style.height = '100vh';
+          video.style.objectFit = 'contain';
+          video.style.position = 'fixed';
+          video.style.top = '0';
+          video.style.left = '0';
         }
 
-        function getSize(el) {
-          if (!el) return null;
-          var w = el.videoWidth || el.naturalWidth || el.width || el.clientWidth;
-          var h = el.videoHeight || el.naturalHeight || el.height || el.clientHeight;
-          if (!w || !h) {
-            var rect = el.getBoundingClientRect();
-            w = rect.width;
-            h = rect.height;
-          }
-          if (!w || !h) return null;
-          return { w: w, h: h };
+        var iframe = document.querySelector('iframe');
+        if (iframe) {
+          iframe.style.width = '100vw';
+          iframe.style.height = '100vh';
+          iframe.style.position = 'fixed';
+          iframe.style.top = '0';
+          iframe.style.left = '0';
+          iframe.style.border = 'none';
         }
-
-        function fitContain() {
-          var el = pickMedia();
-          if (!el) return;
-          var size = getSize(el);
-          if (!size) return;
-          var vw = window.innerWidth;
-          var vh = window.innerHeight;
-          var scale = Math.min(vw / size.w, vh / size.h);
-          el.style.width = size.w + 'px';
-          el.style.height = size.h + 'px';
-          el.style.transform = 'translate(-50%, -50%) scale(' + scale + ')';
-        }
-
-        fitContain();
-        var attempts = 0;
-        var timer = setInterval(function() {
-          attempts++;
-          fitContain();
-          if (attempts > 12) clearInterval(timer);
-        }, 300);
-
-        window.addEventListener('resize', fitContain);
       })();
     ''');
   }
@@ -200,10 +163,23 @@ class _CameraPlayerScreenState extends State<CameraPlayerScreen> {
       body: GestureDetector(
         onTap: _toggleInfo,
         child: Stack(
+          fit: StackFit.expand,
           children: [
             // WebView com o stream
             if (!_hasError)
-              WebViewWidget(controller: _controller),
+              Positioned.fill(
+                child: ClipRect(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Transform.scale(
+                      scale: _viewScale,
+                      child: SizedBox.expand(
+                        child: WebViewWidget(controller: _controller),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
 
             // Tela de erro
             if (_hasError)
@@ -416,7 +392,7 @@ class _CameraPlayerScreenState extends State<CameraPlayerScreen> {
               OutlinedButton.icon(
                 onPressed: () => Navigator.of(context).pop(),
                 icon: const Icon(LucideIcons.arrowLeft, size: 18),
-                label: const Text('Voltar'),
+                label: Text(AppLocalizations.of(context)!.back),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: Colors.white,
                   side: const BorderSide(color: Colors.white54),
@@ -432,7 +408,7 @@ class _CameraPlayerScreenState extends State<CameraPlayerScreen> {
                   _controller.reload();
                 },
                 icon: const Icon(LucideIcons.refreshCw, size: 18),
-                label: const Text('Tentar novamente'),
+                label: Text(AppLocalizations.of(context)!.retry),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
                   foregroundColor: Colors.white,

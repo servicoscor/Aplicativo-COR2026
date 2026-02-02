@@ -1,0 +1,160 @@
+{
+  "@@locale": "zh",
+  "appTitle": "COR.AI",
+  "settingsTitle": "设置",
+  "languageSectionTitle": "语言",
+  "languageLabel": "应用语言",
+  "languagePortuguese": "葡萄牙语（巴西）",
+  "languageEnglish": "英语",
+  "languageSpanish": "西班牙语",
+  "languageChinese": "简体中文"
+  ,
+  "navMap": "地图",
+  "navCity": "城市",
+  "navNetworks": "社交",
+  "navFavorites": "收藏",
+  "navConfig": "设置",
+  "socialTitle": "COR 社交媒体",
+  "socialXLabel": "X (Twitter)",
+  "socialInstagramLabel": "Instagram",
+  "socialFacebookLabel": "Facebook"
+  ,
+  "alertsTitle": "城市",
+  "unreadCountLabel": "{count, plural, =1{# 条未读} other{# 条未读}}",
+  "@unreadCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "filterUnread": "未读",
+  "filterEmergency": "紧急",
+  "filterAlert": "警报",
+  "filterInfo": "信息",
+  "clear": "清除",
+  "emptyAlertsTitle": "暂无警报",
+  "emptyAlertsSubtitle": "你目前没有警报。\n有新消息时将通知你。",
+  "refresh": "刷新",
+  "noResultsTitle": "无结果",
+  "noResultsSubtitle": "没有与所选筛选条件匹配的警报。",
+  "clearFilters": "清除筛选"
+  ,
+  "favoritesTitle": "我的街区",
+  "favoritesInstruction": "添加你喜欢的街区以接收个性化警报，即使定位不可用。",
+  "favoritesSearchHint": "搜索街区...",
+  "favoritesEmptyTitle": "暂无收藏街区",
+  "favoritesEmptySubtitle": "使用上方搜索将街区添加到收藏列表。",
+  "favoritesRemoveTitle": "移除街区？",
+  "favoritesRemoveBody": "是否将“{name}”从收藏街区中移除？",
+  "@favoritesRemoveBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "cancel": "取消",
+  "remove": "移除"
+  ,
+  "appLinkError": "无法打开应用链接。",
+  "install": "安装"
+  ,
+  "sectionPermissions": "权限",
+  "permissionLocationTitle": "定位",
+  "permissionGranted": "权限已授予",
+  "permissionLocationNeeded": "本地警报需要定位权限",
+  "permissionNotificationsTitle": "通知",
+  "permissionNotificationsNeeded": "接收警报需要权限",
+  "sectionAlerts": "警报",
+  "sectionServer": "服务器",
+  "sectionSystemStatus": "系统状态",
+  "sectionDiagnostics": "连接测试",
+  "sectionAbout": "关于",
+  "allow": "允许",
+  "neighborhoodAlertsTitle": "街区警报",
+  "neighborhoodAlertsSubtitle": "选择你想接收警报的街区",
+  "apiUrlLabel": "API 地址",
+  "apiUrlHint": "http://10.0.2.2:8000",
+  "invalidUrl": "无效的 URL。请使用 http:// 或 https://",
+  "save": "保存",
+  "systemFirebase": "Firebase",
+  "statusOk": "正常",
+  "statusNotConfigured": "未配置",
+  "systemFcmToken": "FCM Token",
+  "statusPresent": "已存在",
+  "statusAbsent": "缺失",
+  "systemLastRegister": "上次注册",
+  "statusSuccess": "成功",
+  "statusFailure": "失败",
+  "statusNever": "从未",
+  "testConnectionTitle": "测试连接",
+  "testConnectionSubtitle": "检查 API /v1/health 状态",
+  "test": "测试",
+  "connectionOk": "连接正常",
+  "connectionFailed": "连接失败",
+  "statusLabel": "状态",
+  "versionLabel": "版本",
+  "databaseLabel": "数据库",
+  "cacheLabel": "缓存",
+  "registeredDeviceTitle": "已注册设备",
+  "deviceIdLabel": "ID",
+  "devicePlatformLabel": "平台",
+  "deviceTokenLabel": "Token",
+  "deviceNeighborhoodsLabel": "街区",
+  "aboutSubtitle": "里约运营中心",
+  "developedByLabel": "开发者",
+  "developedByValue": "里约市政府",
+  "timeAgoNow": "刚刚",
+  "timeAgoMinutes": "{minutes} 分钟前",
+  "@timeAgoMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "timeAgoHours": "{hours} 小时前",
+  "@timeAgoHours": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "timeAgoDate": "{date} {time}",
+  "@timeAgoDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  }
+  ,
+  "viewOnMap": "在地图中查看",
+  "watch": "观看",
+  "retry": "重试",
+  "back": "返回"
+  ,
+  "errorGenericTitle": "糟糕！出错了"
+  ,
+  "neighborhoodsSavedSuccess": "街区保存成功！",
+  "neighborhoodsSavedError": "保存街区时出错",
+  "selectedCountLabel": "{count, plural, =1{# 个已选} other{# 个已选}}",
+  "@selectedCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "syncWithFavoritesTitle": "与收藏同步",
+  "syncWithFavoritesSubtitle": "当你添加收藏地点时会自动更新",
+  "selectAll": "全选",
+  "noNeighborhoodsFoundTitle": "未找到街区",
+  "tryAnotherSearch": "尝试其他搜索",
+  "saving": "保存中..."
+}
