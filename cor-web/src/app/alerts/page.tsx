@@ -42,7 +42,11 @@ export default function AlertsPage() {
   const [sendingId, setSendingId] = useState<string | null>(null)
 
   const fetchAlerts = async () => {
-    if (!apiKey) return
+    if (!apiKey) {
+      setAlerts([])
+      setLoading(false)
+      return
+    }
     setLoading(true)
     setError('')
     try {
@@ -50,7 +54,8 @@ export default function AlertsPage() {
         status: statusFilter || undefined,
         page_size: 50,
       })
-      setAlerts(response.data ?? [])
+      const list = Array.isArray(response.data) ? response.data : []
+      setAlerts(list)
     } catch (err) {
       if (err instanceof ApiError) {
         setError(err.message)
@@ -80,6 +85,8 @@ export default function AlertsPage() {
       setSendingId(null)
     }
   }
+
+  const safeAlerts = Array.isArray(alerts) ? alerts : []
 
   return (
     <div className="p-8">
@@ -158,7 +165,7 @@ export default function AlertsPage() {
       )}
 
       {/* Empty State */}
-      {!loading && alerts.length === 0 && (
+      {!loading && safeAlerts.length === 0 && (
         <div className="text-center py-12">
           <Bell className="w-12 h-12 text-gray-600 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-gray-400">Nenhum alerta encontrado</h3>
@@ -167,9 +174,9 @@ export default function AlertsPage() {
       )}
 
       {/* Alerts List */}
-      {!loading && alerts.length > 0 && (
+      {!loading && safeAlerts.length > 0 && (
         <div className="space-y-4">
-          {alerts.map((alert) => {
+          {safeAlerts.map((alert) => {
             const severity = severityConfig[alert.severity]
             const status = statusConfig[alert.status]
             const SeverityIcon = severity.icon
