@@ -50,7 +50,7 @@ export default function AlertsPage() {
         status: statusFilter || undefined,
         page_size: 50,
       })
-      setAlerts(response.alerts)
+      setAlerts(response.data ?? [])
     } catch (err) {
       if (err instanceof ApiError) {
         setError(err.message)

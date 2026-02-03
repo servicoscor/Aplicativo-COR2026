@@ -42,15 +42,15 @@ export interface AlertCreate {
 }
 
 export interface AlertListResponse {
-  alerts: Alert[]
+  data: Alert[]
   total: number
-  page: number
-  page_size: number
+  page?: number
+  page_size?: number
+  has_more?: boolean
 }
 
 export interface AlertSendResponse {
-  message: string
-  alert_id: string
-  targeted_devices: number
+  data: Alert
+  devices_targeted: number
   task_id?: string
 }
