@@ -15,8 +15,26 @@ services:
       - cor-network
 
   web:
-    build: ./cor-web
+    build:
+      context: ./cor-web
+      args:
+        - NEXT_PUBLIC_API_URL=http://187.111.99.18:8001/api
     container_name: cor-web
+    environment:
+      - NEXT_PUBLIC_API_URL=http://187.111.99.18:8001/api
+    depends_on:
+      - api
+    networks:
+      - cor-network
+
+  admin:
+    build:
+      context: ./cor-admin
+      args:
+        - NEXT_PUBLIC_API_URL=http://187.111.99.18:8001/api
+    container_name: cor-admin
+    ports:
+      - "3001:3001"
     environment:
       - NEXT_PUBLIC_API_URL=http://187.111.99.18:8001/api
     depends_on:
