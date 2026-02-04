@@ -8,12 +8,7 @@ class AppConfig {
 
   /// URL padrão baseada na plataforma
   static String get defaultBaseUrl {
-    // Android emulator usa 10.0.2.2 para acessar localhost do host
-    if (Platform.isAndroid) {
-      return 'http://10.0.2.2:8000';
-    }
-    // iOS simulator usa localhost normalmente
-    return 'http://localhost:8000';
+    return 'http://187.111.99.18:8001/api';
   }
 
   final SharedPreferences _prefs;

@@ -75,7 +75,7 @@
   "neighborhoodAlertsTitle": "Alertas por barrio",
   "neighborhoodAlertsSubtitle": "Elige los barrios en los que quieres recibir alertas",
   "apiUrlLabel": "URL de la API",
-  "apiUrlHint": "http://10.0.2.2:8000",
+  "apiUrlHint": "http://187.111.99.18:8001/api",
   "invalidUrl": "URL inválida. Usa http:// o https://",
   "save": "Guardar",
   "systemFirebase": "Firebase",

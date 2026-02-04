@@ -75,7 +75,7 @@
   "neighborhoodAlertsTitle": "Neighborhood alerts",
   "neighborhoodAlertsSubtitle": "Choose the neighborhoods you want to receive alerts for",
   "apiUrlLabel": "API URL",
-  "apiUrlHint": "http://10.0.2.2:8000",
+  "apiUrlHint": "http://187.111.99.18:8001/api",
   "invalidUrl": "Invalid URL. Use http:// or https://",
   "save": "Save",
   "systemFirebase": "Firebase",

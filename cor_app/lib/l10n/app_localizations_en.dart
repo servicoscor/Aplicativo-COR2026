@@ -192,7 +192,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get apiUrlLabel => 'API URL';
 
   @override
-  String get apiUrlHint => 'http://10.0.2.2:8000';
+  String get apiUrlHint => 'http://187.111.99.18:8001/api';
 
   @override
   String get invalidUrl => 'Invalid URL. Use http:// or https://';

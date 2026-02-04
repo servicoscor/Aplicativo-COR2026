@@ -75,7 +75,7 @@
   "neighborhoodAlertsTitle": "街区警报",
   "neighborhoodAlertsSubtitle": "选择你想接收警报的街区",
   "apiUrlLabel": "API 地址",
-  "apiUrlHint": "http://10.0.2.2:8000",
+  "apiUrlHint": "http://187.111.99.18:8001/api",
   "invalidUrl": "无效的 URL。请使用 http:// 或 https://",
   "save": "保存",
   "systemFirebase": "Firebase",

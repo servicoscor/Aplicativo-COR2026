@@ -187,7 +187,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get apiUrlLabel => 'API 地址';
 
   @override
-  String get apiUrlHint => 'http://10.0.2.2:8000';
+  String get apiUrlHint => 'http://187.111.99.18:8001/api';
 
   @override
   String get invalidUrl => '无效的 URL。请使用 http:// 或 https://';
