@@ -87,7 +87,7 @@ export default function AuditPage() {
     queryKey: ['auditLogs', page, action, resource, startDate, endDate],
     queryFn: () =>
       apiClient.getAuditLogs({
-        skip: (page - 1) * limit,
+        offset: (page - 1) * limit,
         limit,
         action: action || undefined,
         resource: resource || undefined,
