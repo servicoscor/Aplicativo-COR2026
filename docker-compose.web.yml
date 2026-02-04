@@ -7,7 +7,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - NEXT_PUBLIC_API_URL=http://10.50.30.245:8000
+      - NEXT_PUBLIC_API_URL=http://10.50.30.245:8001
     depends_on:
       - api
     networks:
@@ -17,7 +17,7 @@ services:
     build: ./cor-api
     container_name: cor-api
     ports:
-      - "8000:8000"
+      - "8001:8000"
     environment:
       - DATABASE_URL=postgresql+asyncpg://cor:cor123@postgres:5432/cor_db
       - DATABASE_URL_SYNC=postgresql://cor:cor123@postgres:5432/cor_db
