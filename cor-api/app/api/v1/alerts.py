@@ -106,75 +106,6 @@ async def list_alerts(
     return AlertListResponse(data=alerts, total=total)
 
 
-@router.get(
-    "/{alert_id}",
-    response_model=AlertDetailResponse,
-    summary="Get Alert",
-    description="Get alert details by ID.",
-)
-async def get_alert(
-    alert_id: str,
-    db: DbSession,
-    _api_key: ApiKeyDep = True,
-    _rate_limit: RateLimitDep = True,
-) -> AlertDetailResponse:
-    """
-    Get alert details by ID.
-
-    Args:
-        alert_id: Alert ID
-
-    Returns:
-        Alert details including areas and delivery count
-    """
-    service = AlertService(db)
-    alert = await service.get_alert(alert_id)
-
-    return AlertDetailResponse(data=alert)
-
-
-@router.post(
-    "/{alert_id}/send",
-    response_model=AlertSendResponse,
-    summary="Send Alert",
-    description="Send a draft alert to targeted devices.",
-)
-async def send_alert(
-    alert_id: str,
-    db: DbSession,
-    _api_key: ApiKeyDep = True,
-    _rate_limit: RateLimitDep = True,
-) -> AlertSendResponse:
-    """
-    Send an alert to targeted devices.
-
-    This endpoint:
-    1. Validates the alert is in draft status
-    2. Counts targeted devices based on targeting rules
-    3. Updates alert status to "sent"
-    4. Triggers async Celery task for actual delivery
-
-    Targeting rules:
-    - broadcast=True: All devices
-    - area: Devices with location inside the area
-    - neighborhoods: Devices without location but matching neighborhoods
-
-    Args:
-        alert_id: Alert ID to send
-
-    Returns:
-        Updated alert, number of devices targeted, and Celery task ID
-    """
-    service = AlertService(db)
-    alert, devices_targeted, task_id = await service.send_alert(alert_id)
-
-    return AlertSendResponse(
-        data=alert,
-        devices_targeted=devices_targeted,
-        task_id=task_id,
-    )
-
-
 # ==================== Public Endpoints ====================
 
 
@@ -282,3 +213,72 @@ async def mark_alert_read(
     )
 
     return MarkAsReadResponse(alert_id=alert_id, read_at=read_at)
+
+
+@router.get(
+    "/{alert_id}",
+    response_model=AlertDetailResponse,
+    summary="Get Alert",
+    description="Get alert details by ID.",
+)
+async def get_alert(
+    alert_id: str,
+    db: DbSession,
+    _api_key: ApiKeyDep = True,
+    _rate_limit: RateLimitDep = True,
+) -> AlertDetailResponse:
+    """
+    Get alert details by ID.
+
+    Args:
+        alert_id: Alert ID
+
+    Returns:
+        Alert details including areas and delivery count
+    """
+    service = AlertService(db)
+    alert = await service.get_alert(alert_id)
+
+    return AlertDetailResponse(data=alert)
+
+
+@router.post(
+    "/{alert_id}/send",
+    response_model=AlertSendResponse,
+    summary="Send Alert",
+    description="Send a draft alert to targeted devices.",
+)
+async def send_alert(
+    alert_id: str,
+    db: DbSession,
+    _api_key: ApiKeyDep = True,
+    _rate_limit: RateLimitDep = True,
+) -> AlertSendResponse:
+    """
+    Send an alert to targeted devices.
+
+    This endpoint:
+    1. Validates the alert is in draft status
+    2. Counts targeted devices based on targeting rules
+    3. Updates alert status to "sent"
+    4. Triggers async Celery task for actual delivery
+
+    Targeting rules:
+    - broadcast=True: All devices
+    - area: Devices with location inside the area
+    - neighborhoods: Devices without location but matching neighborhoods
+
+    Args:
+        alert_id: Alert ID to send
+
+    Returns:
+        Updated alert, number of devices targeted, and Celery task ID
+    """
+    service = AlertService(db)
+    alert, devices_targeted, task_id = await service.send_alert(alert_id)
+
+    return AlertSendResponse(
+        data=alert,
+        devices_targeted=devices_targeted,
+        task_id=task_id,
+    )
