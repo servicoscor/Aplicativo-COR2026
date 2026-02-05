@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -268,6 +269,7 @@ class _CityNowPanelState extends ConsumerState<CityNowPanel>
   bool _isExpanded = true;
   late AnimationController _animationController;
   late Animation<double> _expandAnimation;
+  Timer? _autoCloseTimer;
 
   @override
   void initState() {
@@ -282,12 +284,25 @@ class _CityNowPanelState extends ConsumerState<CityNowPanel>
     );
     // Inicia expandido
     _animationController.value = 1.0;
+    _scheduleAutoClose();
   }
 
   @override
   void dispose() {
+    _autoCloseTimer?.cancel();
     _animationController.dispose();
     super.dispose();
+  }
+
+  void _scheduleAutoClose() {
+    _autoCloseTimer?.cancel();
+    _autoCloseTimer = Timer(const Duration(seconds: 10), () {
+      if (!mounted || !_isExpanded) return;
+      setState(() {
+        _isExpanded = false;
+        _animationController.reverse();
+      });
+    });
   }
 
   void _toggleExpanded() {
@@ -295,8 +310,10 @@ class _CityNowPanelState extends ConsumerState<CityNowPanel>
       _isExpanded = !_isExpanded;
       if (_isExpanded) {
         _animationController.forward();
+        _scheduleAutoClose();
       } else {
         _animationController.reverse();
+        _autoCloseTimer?.cancel();
       }
     });
   }

@@ -210,6 +210,18 @@ abstract class AppLocalizations {
   /// **'Cidade'**
   String get alertsTitle;
 
+  /// No description provided for @myAlertsTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Meus Alertas'**
+  String get myAlertsTitle;
+
+  /// No description provided for @alertsCountLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'{count, plural, =1{# alerta} other{# alertas}}'**
+  String alertsCountLabel(int count);
+
   /// No description provided for @unreadCountLabel.
   ///
   /// In pt, this message translates to:

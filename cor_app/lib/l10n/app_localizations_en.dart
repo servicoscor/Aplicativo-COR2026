@@ -63,6 +63,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get alertsTitle => 'City';
 
   @override
+  String get myAlertsTitle => 'My Alerts';
+
+  @override
+  String alertsCountLabel(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '# alerts',
+      one: '# alert',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String unreadCountLabel(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,

@@ -20,6 +20,15 @@
   "socialFacebookLabel": "Facebook"
   ,
   "alertsTitle": "城市",
+  "myAlertsTitle": "我的警报",
+  "alertsCountLabel": "{count, plural, =1{# 条警报} other{# 条警报}}",
+  "@alertsCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "unreadCountLabel": "{count, plural, =1{# 条未读} other{# 条未读}}",
   "@unreadCountLabel": {
     "placeholders": {

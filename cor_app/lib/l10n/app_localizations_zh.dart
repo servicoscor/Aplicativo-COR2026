@@ -63,6 +63,20 @@ class AppLocalizationsZh extends AppLocalizations {
   String get alertsTitle => '城市';
 
   @override
+  String get myAlertsTitle => '我的警报';
+
+  @override
+  String alertsCountLabel(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '# 条警报',
+      one: '# 条警报',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String unreadCountLabel(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,

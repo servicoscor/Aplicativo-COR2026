@@ -14,6 +14,7 @@ import '../../../../l10n/app_localizations.dart';
 import '../../../../core/services/camera_service.dart';
 import '../../../../core/services/status_service.dart';
 import '../controllers/map_controller.dart';
+import '../../../alerts/presentation/controllers/alerts_controller.dart';
 import '../widgets/incident_marker.dart';
 import '../widgets/rain_gauge_marker.dart';
 import '../widgets/siren_marker.dart';
@@ -81,6 +82,8 @@ class _MapScreenState extends ConsumerState<MapScreen>
       _triggerInitialBboxFetch();
       // Garante refresh do status ao abrir a tela do mapa
       ref.read(statusControllerProvider.notifier).refresh();
+      // Carrega alertas para o painel "Meus Alertas"
+      ref.read(alertsControllerProvider.notifier).loadAlerts();
     });
   }
 
@@ -635,6 +638,7 @@ class _MapScreenState extends ConsumerState<MapScreen>
   Widget build(BuildContext context) {
     final state = ref.watch(mapControllerProvider);
     final controller = ref.read(mapControllerProvider.notifier);
+    final alertsState = ref.watch(alertsControllerProvider);
 
     return Scaffold(
       body: Stack(
@@ -934,23 +938,24 @@ class _MapScreenState extends ConsumerState<MapScreen>
               ),
             ),
 
-          // Painel Cidade Agora (abaixo do clima) - esconde quando dropdown está aberto
+          // Painel Cidade Agora (abaixo do clima) - esconde quando dropdown esta aberto
           if (!_isWeatherExpanded)
             Positioned(
               top: MediaQuery.of(context).padding.top + (state.weather != null ? 146 : 76),
               left: 0,
               right: 0,
               child: CityNowPanel(
-              cards: CityNowHeuristics.generateCards(
-                incidents: state.incidents,
-                rainGauges: state.rainGauges,
+                cards: CityNowHeuristics.generateCards(
+                  incidents: state.incidents,
+                  rainGauges: state.rainGauges,
+                  activeAlerts: alertsState.activeAlerts,
+                ),
+                onViewOnMap: (location) {
+                  // Usa o sistema de foco com highlight
+                  controller.focusOnPoint(location, zoom: 15.0);
+                },
               ),
-              onViewOnMap: (location) {
-                // Usa o sistema de foco com highlight
-                controller.focusOnPoint(location, zoom: 15.0);
-              },
             ),
-          ),
 
           // Badge de highlight ativo (abaixo da barra operacional)
           if (state.hasActiveHighlight)

@@ -25,6 +25,7 @@ class SubscriptionsRepository {
 
   static const _pushTokenKey = 'push_token';
   static const _syncWithFavoritesKey = 'sync_subscriptions_with_favorites';
+  static const _subscriptionsKey = 'subscribed_neighborhoods_local';
 
   SubscriptionsRepository(this._apiClient, this._prefs);
 
@@ -37,6 +38,15 @@ class SubscriptionsRepository {
   /// Define sincronização com favoritos
   Future<void> setSyncWithFavorites(bool value) async {
     await _prefs.setBool(_syncWithFavoritesKey, value);
+  }
+
+  /// Obtém subscriptions salvas localmente
+  List<String> get localSubscriptions =>
+      _prefs.getStringList(_subscriptionsKey) ?? [];
+
+  /// Salva subscriptions localmente
+  Future<void> setLocalSubscriptions(List<String> neighborhoods) async {
+    await _prefs.setStringList(_subscriptionsKey, neighborhoods);
   }
 
   /// Busca lista de bairros do Rio de Janeiro
@@ -58,7 +68,7 @@ class SubscriptionsRepository {
   Future<List<String>> getSubscriptions() async {
     final token = pushToken;
     if (token == null) {
-      return [];
+      return localSubscriptions;
     }
 
     try {
@@ -68,17 +78,22 @@ class SubscriptionsRepository {
       );
 
       final neighborhoods = response['subscribed_neighborhoods'] as List? ?? [];
-      return neighborhoods.cast<String>();
+      final remote = neighborhoods.cast<String>();
+      if (remote.isEmpty && localSubscriptions.isNotEmpty) {
+        return localSubscriptions;
+      }
+      return remote;
     } catch (e) {
-      return [];
+      return localSubscriptions;
     }
   }
 
   /// Atualiza bairros inscritos do dispositivo
   Future<bool> updateSubscriptions(List<String> neighborhoods) async {
     final token = pushToken;
+    await setLocalSubscriptions(neighborhoods);
     if (token == null) {
-      return false;
+      return true;
     }
 
     try {

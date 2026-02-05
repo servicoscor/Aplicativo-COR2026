@@ -20,6 +20,15 @@
   "socialFacebookLabel": "Facebook"
   ,
   "alertsTitle": "City",
+  "myAlertsTitle": "My Alerts",
+  "alertsCountLabel": "{count, plural, =1{# alert} other{# alerts}}",
+  "@alertsCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "unreadCountLabel": "{count, plural, =1{# unread} other{# unread}}",
   "@unreadCountLabel": {
     "placeholders": {

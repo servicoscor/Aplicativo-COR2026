@@ -63,6 +63,10 @@
 	</array>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>Este app precisa acessar a rede local para se conectar ao servidor da API.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Este app precisa da sua localizacao para mostrar alertas e recursos proximos.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Este app precisa da sua localizacao para mostrar alertas e recursos proximos.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
