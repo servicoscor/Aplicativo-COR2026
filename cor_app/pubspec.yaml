@@ -1,7 +1,7 @@
 name: cor_app
 description: COR.AI - Centro de Operações Rio - Alertas Georreferenciados
 publish_to: 'none'
-version: 1.0.0+1
+version: 4.0.26+80
 
 environment:
   sdk: '>=3.2.0 <4.0.0'

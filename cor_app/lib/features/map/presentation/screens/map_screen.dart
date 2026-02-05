@@ -13,6 +13,7 @@ import '../../../../core/models/models.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/services/camera_service.dart';
 import '../../../../core/services/status_service.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../controllers/map_controller.dart';
 import '../../../alerts/presentation/controllers/alerts_controller.dart';
 import '../widgets/incident_marker.dart';
@@ -45,14 +46,19 @@ class MapScreen extends ConsumerStatefulWidget {
 class _MapScreenState extends ConsumerState<MapScreen>
     with SingleTickerProviderStateMixin {
   late final fm.MapController _mapController;
+  late final AnimationController _carnavalPulseController;
+  late final Animation<double> _carnavalPulse;
   bool _isWeatherExpanded = false;
   bool _hasCenteredOnUser = false;
+<<<<<<< Updated upstream
   late final AnimationController _carnavalPulseController;
   late final Animation<double> _carnavalPulse;
   double _currentZoom = _defaultZoom;
 
   static const double _cameraMinZoom = 8.0;
   static const int _cameraDisableClusteringAtZoom = 16;
+=======
+>>>>>>> Stashed changes
 
   // Centro do Rio de Janeiro
   static const _rioCenter = LatLng(-22.9068, -43.1729);
@@ -67,7 +73,11 @@ class _MapScreenState extends ConsumerState<MapScreen>
     _mapController = fm.MapController();
     _carnavalPulseController = AnimationController(
       vsync: this,
+<<<<<<< Updated upstream
       duration: const Duration(milliseconds: 1400),
+=======
+      duration: const Duration(seconds: 2),
+>>>>>>> Stashed changes
     )..repeat(reverse: true);
     _carnavalPulse = CurvedAnimation(
       parent: _carnavalPulseController,
@@ -801,7 +811,13 @@ class _MapScreenState extends ConsumerState<MapScreen>
                     return MarkerClusterLayerWidget(
                       options: MarkerClusterLayerOptions(
                         maxClusterRadius: 80,
+<<<<<<< Updated upstream
                         disableClusteringAtZoom: _cameraDisableClusteringAtZoom,
+=======
+                        disableClusteringAtZoom: 17,
+                        zoomToBoundsOnClick: true,
+                        spiderfyOnMaxZoom: true,
+>>>>>>> Stashed changes
                         size: const Size(48, 48),
                         markers: cameras.map((camera) {
                           return fm.Marker(
