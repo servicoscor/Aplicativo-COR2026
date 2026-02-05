@@ -441,7 +441,7 @@ abstract class AppLocalizations {
   /// No description provided for @apiUrlHint.
   ///
   /// In pt, this message translates to:
-  /// **'http://10.0.2.2:8000'**
+  /// **'http://187.111.99.18:8001/api'**
   String get apiUrlHint;
 
   /// No description provided for @invalidUrl.

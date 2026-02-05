@@ -60,6 +60,17 @@ class Siren {
 
   factory Siren.fromJson(Map<String, dynamic> json) {
     final statusStr = json['status']?.toString();
+    final online = json['online'] == true || json['online'] == 'true';
+    final parsedStatus = statusStr.toSirenStatus();
+    final normalizedStatus =
+        (parsedStatus == SirenStatus.inactive && online)
+            ? SirenStatus.active
+            : parsedStatus;
+    final labelFromApi = json['status_label'];
+    final baseLabel = labelFromApi ?? _getStatusLabel(statusStr);
+    final normalizedLabel = normalizedStatus == parsedStatus
+        ? baseLabel
+        : _labelForStatus(normalizedStatus);
 
     return Siren(
       id: json['id']?.toString() ?? '',
@@ -67,9 +78,9 @@ class Siren {
       latitude: (json['latitude'] ?? 0).toDouble(),
       longitude: (json['longitude'] ?? 0).toDouble(),
       basin: json['basin'],
-      online: json['online'] == true || json['online'] == 'true',
-      status: statusStr.toSirenStatus(),
-      statusLabel: json['status_label'] ?? _getStatusLabel(statusStr),
+      online: online,
+      status: normalizedStatus,
+      statusLabel: normalizedLabel,
     );
   }
 
@@ -85,6 +96,19 @@ class Siren {
       case 'triggered':
         return 'Acionada';
       default:
+        return 'Desconhecido';
+    }
+  }
+
+  static String _labelForStatus(SirenStatus status) {
+    switch (status) {
+      case SirenStatus.inactive:
+        return 'Desativada';
+      case SirenStatus.active:
+        return 'Ativa';
+      case SirenStatus.triggered:
+        return 'Acionada';
+      case SirenStatus.unknown:
         return 'Desconhecido';
     }
   }

@@ -6,9 +6,11 @@ import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/config/app_config.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/models/models.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../../core/services/camera_service.dart';
 import '../../../../core/services/status_service.dart';
 import '../controllers/map_controller.dart';
@@ -43,6 +45,13 @@ class _MapScreenState extends ConsumerState<MapScreen>
     with SingleTickerProviderStateMixin {
   late final fm.MapController _mapController;
   bool _isWeatherExpanded = false;
+  bool _hasCenteredOnUser = false;
+  late final AnimationController _carnavalPulseController;
+  late final Animation<double> _carnavalPulse;
+  double _currentZoom = _defaultZoom;
+
+  static const double _cameraMinZoom = 8.0;
+  static const int _cameraDisableClusteringAtZoom = 16;
 
   // Centro do Rio de Janeiro
   static const _rioCenter = LatLng(-22.9068, -43.1729);
@@ -55,6 +64,14 @@ class _MapScreenState extends ConsumerState<MapScreen>
   void initState() {
     super.initState();
     _mapController = fm.MapController();
+    _carnavalPulseController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1400),
+    )..repeat(reverse: true);
+    _carnavalPulse = CurvedAnimation(
+      parent: _carnavalPulseController,
+      curve: Curves.easeInOut,
+    );
 
     // Solicita localização ao iniciar e configura listeners
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -75,6 +92,12 @@ class _MapScreenState extends ConsumerState<MapScreen>
 
       final camera = _mapController.camera;
       final bounds = camera.visibleBounds;
+
+      if ((camera.zoom - _currentZoom).abs() > 0.05) {
+        setState(() {
+          _currentZoom = camera.zoom;
+        });
+      }
 
       ref.read(mapControllerProvider.notifier).onMapPositionChanged(
         north: bounds.north,
@@ -128,7 +151,6 @@ class _MapScreenState extends ConsumerState<MapScreen>
 
   @override
   void dispose() {
-    _eventPulseController.dispose();
     _mapController.dispose();
     _carnavalPulseController.dispose();
     super.dispose();
@@ -307,8 +329,8 @@ class _MapScreenState extends ConsumerState<MapScreen>
       animation: _carnavalPulse,
       builder: (context, child) {
         final glowOpacity = 0.35 + (0.35 * _carnavalPulse.value);
-        final blur = 16 + (12 * _carnavalPulse.value);
-        final spread = 1 + (3 * _carnavalPulse.value);
+        final blur = 16.0 + (12.0 * _carnavalPulse.value);
+        final spread = 1.0 + (3.0 * _carnavalPulse.value);
         return Container(
           decoration: BoxDecoration(
             shape: BoxShape.circle,
@@ -636,6 +658,14 @@ class _MapScreenState extends ConsumerState<MapScreen>
                   west: bounds.west,
                   zoom: camera.zoom,
                 );
+
+
+                final nextZoom = camera.zoom;
+                if ((nextZoom - _currentZoom).abs() > 0.05) {
+                  setState(() {
+                    _currentZoom = nextZoom;
+                  });
+                }
               },
             ),
             children: [
@@ -761,9 +791,13 @@ class _MapScreenState extends ConsumerState<MapScreen>
                     if (cameras == null || cameras.isEmpty) {
                       return const SizedBox.shrink();
                     }
+                    if (_currentZoom < _cameraMinZoom) {
+                      return const SizedBox.shrink();
+                    }
                     return MarkerClusterLayerWidget(
                       options: MarkerClusterLayerOptions(
                         maxClusterRadius: 80,
+                        disableClusteringAtZoom: _cameraDisableClusteringAtZoom,
                         size: const Size(48, 48),
                         markers: cameras.map((camera) {
                           return fm.Marker(
