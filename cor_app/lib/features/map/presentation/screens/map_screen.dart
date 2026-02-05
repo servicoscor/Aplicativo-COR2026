@@ -811,13 +811,7 @@ class _MapScreenState extends ConsumerState<MapScreen>
                     return MarkerClusterLayerWidget(
                       options: MarkerClusterLayerOptions(
                         maxClusterRadius: 80,
-<<<<<<< Updated upstream
                         disableClusteringAtZoom: _cameraDisableClusteringAtZoom,
-=======
-                        disableClusteringAtZoom: 17,
-                        zoomToBoundsOnClick: true,
-                        spiderfyOnMaxZoom: true,
->>>>>>> Stashed changes
                         size: const Size(48, 48),
                         markers: cameras.map((camera) {
                           return fm.Marker(
