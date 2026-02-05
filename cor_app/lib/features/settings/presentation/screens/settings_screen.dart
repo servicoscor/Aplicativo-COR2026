@@ -95,36 +95,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
           const SizedBox(height: AppSpacing.xl),
 
-          // Seção: Servidor
-          _buildSectionTitle(l10n.sectionServer),
-          _buildUrlTile(state, controller),
-
-          const SizedBox(height: AppSpacing.xl),
-
-          // Seção: Status do Sistema
-          _buildSectionTitle(l10n.sectionSystemStatus),
-          _buildSystemStatusTile(state),
-
-          const SizedBox(height: AppSpacing.xl),
-
-          // Seção: Diagnóstico (Teste de Conexão)
-          _buildSectionTitle(l10n.sectionDiagnostics),
-          _buildDiagnosticTile(state, controller),
-
-          // Resultado do teste
-          if (state.healthResult != null) ...[
-            const SizedBox(height: AppSpacing.md),
-            _buildHealthResult(state.healthResult!),
-          ],
-
-          // Info do dispositivo
-          if (state.deviceInfo != null) ...[
-            const SizedBox(height: AppSpacing.md),
-            _buildDeviceInfo(state.deviceInfo!),
-          ],
-
-          const SizedBox(height: AppSpacing.xl),
-
           // Seção: Sobre
           _buildSectionTitle(l10n.sectionAbout),
           _buildAboutTile(),

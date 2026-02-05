@@ -41,6 +41,13 @@
 				<key>NSIncludesSubdomains</key>
 				<true/>
 			</dict>
+			<key>187.111.99.18</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+			</dict>
 			<key>alertario.rio.rj.gov.br</key>
 			<dict>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>
